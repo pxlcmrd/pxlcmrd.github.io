@@ -6114,3 +6114,6 @@ body::-webkit-scrollbar-thumb {
   height: 4px !important;
   border-radius: 4px !important;
 }
+.fas {
+  color: #25a56a;
+}
