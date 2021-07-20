@@ -532,16 +532,16 @@ body::-webkit-scrollbar-thumb {
   margin-top: 5px;
 }
 .header__note--succ svg {
-  fill: #25a56a;
+  color: #25a56a;
 }
 .header__note--fail svg {
-  fill: #eb5757;
+  color: #eb5757;
 }
 .header__note--info svg {
-  fill: #c0c0c0;
+  color: #c0c0c0;
 }
 .header__note--gift svg {
-  fill: #8051d4;
+  color: #8051d4;
 }
 .header__product {
   display: flex;
@@ -6114,6 +6114,11 @@ body::-webkit-scrollbar-thumb {
   height: 4px !important;
   border-radius: 4px !important;
 }
-.fas {
+
+#top_lista h2 svg, .album__cover a svg {
   color: #25a56a;
+}
+
+.header__search svg, .header__action-btn svg, #top_formatos svg, #top_generos svg {
+  color: #c0c0c0;
 }

@@ -1,3 +1,11 @@
+document.getElementsByClassName('header__search')[0].getElementsByClassName('close')[0].addEventListener('click', function() {
+    document.getElementsByClassName('header__search')[0].classList.remove('header__search--active');
+});
+
+document.getElementsByClassName('header__action--search')[0].getElementsByTagName('button')[0].addEventListener('click', function() {
+    document.getElementsByClassName('header__search')[0].classList.add('header__search--active');
+});
+
 var conteudo_releases = alasql("SELECT * FROM ? ORDER BY RANDOM() LIMIT 24", [list]).reduce(function(a, v) {
     return a +
         '<div class="col-6 col-sm-4 col-lg-2">' +
@@ -5,7 +13,7 @@ var conteudo_releases = alasql("SELECT * FROM ? ORDER BY RANDOM() LIMIT 24", [li
         '    <div class="album__cover">' +
         '      <img src="img/' + v.id + '.jpg" onerror="this.src=\'img/no-image.png\'">' +
         '      <a href="release.html">' +
-        '        <i class="fas fa-search-plus"></i>' +
+        '        <i class="fas fa-2x fa-search-plus"></i>' +
         '      </a>' +
         '      <span class="album__stat">' +
         '        <span>' +
@@ -38,23 +46,9 @@ var conteudo_artistas = alasql("SELECT *, count(*) AS num FROM ? WHERE artists_s
         '  <span class="single-item__number">' + (i + 1) +
         '  </span>' +
         '  <span class="single-item__rate">' +
-        //'    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
-        //'      <path d="M12.71,12.54a1,1,0,0,0-1.42,0l-3,3A1,1,0,0,0,9.71,17L12,14.66,14.29,17a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Zm-3-1.08L12,9.16l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Z">' +
-        //'      </path>' +
-        //'    </svg> ' +
         '  </span>' +
         '  <a data-link="" data-title="' + v.artists[0].name + '" data-artist="AudioPizza" data-img="' + v.artists[0].thumbnail_url + '" href="https://www.discogs.com/pt_BR/artist/' + v.artists[0].id + '" class="single-item__cover">' +
         '    <img src="' + v.artists[0].thumbnail_url + '"  onerror="this.src=\'img/no-image.png\'">' +
-        //'    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
-        //'      <path d="M18.54,9,8.88,3.46a3.42,3.42,0,0,0-5.13,3V17.58A3.42,3.42,0,0,0,7.17,21a3.43,3.43,0,0,0,1.71-.46L18.54,15a3.42,3.42,0,0,0,0-5.92Zm-1,4.19L7.88,18.81a1.44,1.44,0,0,1-1.42,0,1.42,1.42,0,0,1-.71-1.23V6.42a1.42,1.42,0,0,1,.71-1.23A1.51,1.51,0,0,1,7.17,5a1.54,1.54,0,0,1,.71.19l9.66,5.58a1.42,1.42,0,0,1,0,2.46Z">' +
-        //'      </path>' +
-        //'    </svg>' +
-        //'    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
-        //'      <path d="M16,2a3,3,0,0,0-3,3V19a3,3,0,0,0,6,0V5A3,3,0,0,0,16,2Zm1,17a1,1,0,0,1-2,0V5a1,1,0,0,1,2,0ZM8,2A3,3,0,0,0,5,5V19a3,3,0,0,0,6,0V5A3,3,0,0,0,8,2ZM9,19a1,1,0,0,1-2,0V5A1,1,0,0,1,9,5Z">' +
-        //'      </path>' +
-        //'    </svg>' +
-        '    <i class="fas fa-microphone-alt" style="color:#25a56a"></i>' +
-        '    <i class="fas fa-microphone-alt" style="color:#25a56a"></i>' +
         '  </a>' +
         '  <div class="single-item__title">' +
         '      <h4>' +
@@ -118,25 +112,15 @@ var conteudo_formatos = "";
 for (var i = 0; i < 5; i++) {
     conteudo_generos +=
         '<li class="single-item">' +
-        '  <a data-link="" data-title="Got What I Got" data-artist="Jason Aldean" data-img="img/covers/cover.svg" href="#" class="single-item__cover">' +
-        '    <img src="img/covers/cover.svg" alt="">' +
-        '    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
-        '      <path d="M18.54,9,8.88,3.46a3.42,3.42,0,0,0-5.13,3V17.58A3.42,3.42,0,0,0,7.17,21a3.43,3.43,0,0,0,1.71-.46L18.54,15a3.42,3.42,0,0,0,0-5.92Zm-1,4.19L7.88,18.81a1.44,1.44,0,0,1-1.42,0,1.42,1.42,0,0,1-.71-1.23V6.42a1.42,1.42,0,0,1,.71-1.23A1.51,1.51,0,0,1,7.17,5a1.54,1.54,0,0,1,.71.19l9.66,5.58a1.42,1.42,0,0,1,0,2.46Z">' +
-        '      </path>' +
-        '    </svg>' +
-        '    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
-        '      <path d="M16,2a3,3,0,0,0-3,3V19a3,3,0,0,0,6,0V5A3,3,0,0,0,16,2Zm1,17a1,1,0,0,1-2,0V5a1,1,0,0,1,2,0ZM8,2A3,3,0,0,0,5,5V19a3,3,0,0,0,6,0V5A3,3,0,0,0,8,2ZM9,19a1,1,0,0,1-2,0V5A1,1,0,0,1,9,5Z">' +
-        '      </path>' +
-        '    </svg>' +
-        '  </a>' +
+        '<i class="far fa-2x fa-' + (
+            top5_generos[i] == 'MPB' ? 'guitar' :
+            top5_generos[i] == 'Pop Rock' ? 'guitar-electric' :
+            top5_generos[i] == 'Synth-pop' ? 'piano-keyboard' :
+            top5_generos[i] == 'Prog Rock' ? 'guitars' :
+            top5_generos[i] == 'Samba' ? 'drum' : 'microphone-stand'
+        ) + '"></i>' +
         '  <div class="single-item__title">' +
-        '    <h4>' +
-        '    <a href="#">' + top5_generos[i] +
-        '    </a></h4>' +
-        //'    <span>' +
-        //'      <a href="#">Jason Aldean' +
-        //'      </a>' +
-        //'    </span>' +
+        '    <h4>' + top5_generos[i] + '</h4>' +
         '  </div>' +
         '  <span class="single-item__time">' + generos[top5_generos[i]] +
         '  </span>' +
@@ -144,26 +128,11 @@ for (var i = 0; i < 5; i++) {
 
     conteudo_formatos +=
         '<li class="single-item">' +
-        '<i class="fas fa-2x fa-' + (top5_formatos[i].indexOf('Vinyl') > -1 ? 'record-vinyl' : 'compact-disc') + '"></i>' +
-        '  <a data-link="" data-title="Supalonely" data-artist="BENEE Featuring" data-img="img/covers/cover9.jpg" href="https://dmitryvolkov.me/demo/blast2.0/audio/9106709_epic-adventure-cinematic-trailer_by_audiopizza_preview.mp3" class="single-item__cover">' +
-        /*'    <img src="img/covers/cover9.jpg" alt="">' +
-        '    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
-        '      <path d="M18.54,9,8.88,3.46a3.42,3.42,0,0,0-5.13,3V17.58A3.42,3.42,0,0,0,7.17,21a3.43,3.43,0,0,0,1.71-.46L18.54,15a3.42,3.42,0,0,0,0-5.92Zm-1,4.19L7.88,18.81a1.44,1.44,0,0,1-1.42,0,1.42,1.42,0,0,1-.71-1.23V6.42a1.42,1.42,0,0,1,.71-1.23A1.51,1.51,0,0,1,7.17,5a1.54,1.54,0,0,1,.71.19l9.66,5.58a1.42,1.42,0,0,1,0,2.46Z">' +
-        '      </path>' +
-        '    </svg>' +
-        '    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
-        '      <path d="M16,2a3,3,0,0,0-3,3V19a3,3,0,0,0,6,0V5A3,3,0,0,0,16,2Zm1,17a1,1,0,0,1-2,0V5a1,1,0,0,1,2,0ZM8,2A3,3,0,0,0,5,5V19a3,3,0,0,0,6,0V5A3,3,0,0,0,8,2ZM9,19a1,1,0,0,1-2,0V5A1,1,0,0,1,9,5Z">' +
-        '      </path>' +
-        '    </svg>' +*/
-        '  </a>' +
+        '<i class="fas fa-2x fa-' + (top5_formatos[i].indexOf('Vinyl') > -1 ? 'record-vinyl' : top5_formatos[i] == 'Cassette' ? 'cassette-tape' : 'compact-disc') + '"></i>' +
         '  <div class="single-item__title">' +
         '    <h4>' +
         '    ' + top5_formatos[i] +
         '    </h4>' +
-        //'    <span>' +
-        //'      <a href="artist.html">BENEE Featuring' +
-        //'      </a>' +
-        //'    </span>' +
         '  </div>' +
         '  <span class="single-item__time">' + formatos[top5_formatos[i]] +
         '  </span>' +
