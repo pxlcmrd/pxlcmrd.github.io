@@ -1,10 +1,12 @@
 <!-- Template original https://bootstrap4.com/out/?demo=volna-record-label-music-streaming-html-template -->
-<html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 		<link rel="shortcut icon" href="img/favicon.png">
- 		<script defer src="js/fontawesome.min.js"></script>
+		<script defer src="js/fontawesome.min.js"></script>
 		<title>Lista</title>
 	</head>
 	<body>
@@ -15,24 +17,19 @@
 						<img src="img/logo.png" alt="">
 					</a>
 				</div>
-				<nav class="header__nav">
-					<a href="profile.html">Profile</a>
-					<a href="about.html">About</a>
-					<a href="contacts.html">Contacts</a>
-				</nav>
 				<form action="#" class="header__search">
 					<input type="text" placeholder="Artista, &aacute;lbum ou faixa">
 					<button type="button">
-						<i class="far fa-search"></i>
+					<i class="far fa-search"></i>
 					</button>
 					<button type="button" class="close">
-						<i class="far fa-times"></i>
+					<i class="far fa-times"></i>
 					</button>
 				</form>
 				<div class="header__actions">
 					<div class="header__action header__action--search">
 						<button class="header__action-btn" type="button">
-							<i class="far fa-search"></i>
+						<i class="far fa-search"></i>
 						</button>
 					</div>
 					<div class="header__action header__action--note">
@@ -127,6 +124,24 @@
 		</div>
 		<main class="main">
 			<div class="container-fluid">
+				<div class="row row--grid">
+					<!-- title -->
+					<div class="col-12">
+						<div class="main__title main__title--page">
+						</div>
+					</div>
+					<!-- end title -->
+					<div class="col-12">
+						<div class="release">
+							<div class="release__content">
+							</div>
+							<div class="release__list" data-scrollbar="true" tabindex="-1" style="overflow: hidden; outline: currentcolor none medium;">
+								<ul id="track_list" class="main__list main__list--playlist main__list--dashbox">
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
 				<!-- releases -->
 				<section id="releases" class="row row--grid">
 					<!-- title -->
@@ -148,7 +163,7 @@
 							<div class="col-12">
 								<div class="main__title">
 									<h2>
-										<i class="far fa-microphone"></i> Artistas
+									<i class="far fa-microphone"></i> Artistas
 									</h2>
 								</div>
 							</div>
@@ -167,7 +182,7 @@
 								<div class="main__title">
 									<h2>
 									<i class="far fa-music"></i> G&ecirc;neros
-									</a></h2>
+									</h2>
 								</div>
 							</div>
 							<!-- end title -->
@@ -184,7 +199,7 @@
 							<div class="col-12">
 								<div class="main__title">
 									<h2>
-										<i class="far fa-album"></i> Formatos
+									<i class="far fa-album"></i> Formatos
 									</h2>
 								</div>
 							</div>
@@ -200,6 +215,7 @@
 			</div>
 		</main>
 		<script src="js/bootstrap.bundle.min.js"></script>
+		<script src="js/smooth-scrollbar.js"></script>
 		<script src="js/alasql.min.js"></script>
 		<script src="js/output.js"></script>
 		<script src="js/main.js"></script>

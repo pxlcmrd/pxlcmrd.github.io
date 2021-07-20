@@ -714,7 +714,7 @@ body::-webkit-scrollbar-thumb {
     position: relative;
     top: auto;
     left: auto;
-    width: 320px;
+    width: 640px;
     padding: 0;
     border: none;
     background-color: transparent;
@@ -851,6 +851,7 @@ body::-webkit-scrollbar-thumb {
 .sidebar__nav-link--active,
 .sidebar__nav-link[aria-expanded="true"] {
   color: #fff;
+  font-weight: bold;
 }
 .sidebar__nav-link--active svg,
 .sidebar__nav-link[aria-expanded="true"] svg {
@@ -874,6 +875,9 @@ body::-webkit-scrollbar-thumb {
 }
 .sidebar__nav-item:last-child {
   margin-bottom: 0;
+}
+.sidebar__nav-item a:hover {
+  color: #25a56a;
 }
 .sidebar__menu {
   padding: 0;
@@ -953,9 +957,6 @@ body::-webkit-scrollbar-thumb {
 @media (min-width: 1200px) {
   .sidebar {
     transform: translateX(0);
-  }
-  .sidebar__nav {
-    max-height: calc(100vh - 332px);
   }
 }
 /*==============================
@@ -1267,7 +1268,7 @@ body::-webkit-scrollbar-thumb {
 }
 .main__title--page {
   margin-bottom: 0;
-  margin-top: 50px;
+  margin-top: 25px !important;
 }
 .main__link {
   display: flex;
@@ -1286,10 +1287,7 @@ body::-webkit-scrollbar-thumb {
   transition: fill 0.5s ease;
 }
 .main__link:hover {
-  color: #fff;
-}
-.main__link:hover svg {
-  fill: #25a56a;
+  color: #25a56a;
 }
 .main__carousel-wrap {
   position: relative;
@@ -6115,10 +6113,75 @@ body::-webkit-scrollbar-thumb {
   border-radius: 4px !important;
 }
 
-#top_lista h2 svg, .album__cover a svg {
+#top_lista h2 svg,
+.release__stat svg,
+.album__cover a svg{
   color: #25a56a;
 }
 
 .header__search svg, .header__action-btn svg, #top_formatos svg, #top_generos svg {
   color: #c0c0c0;
+}
+
+@media (min-width: 400px) {
+  #track_list .single-item__title {
+    max-width: 160px;
+  }
+}
+@media (min-width: 600px) {
+  #track_list .single-item__title {
+    max-width: 300px;
+  }
+}
+@media (min-width: 768px) {
+  #track_list .single-item__title {
+    max-width: 250px;
+  }
+}
+@media (min-width: 1000px) {
+  #track_list .single-item__title {
+    max-width: 450px;
+  }
+}
+@media (min-width: 1200px) {
+  #track_list .single-item__title {
+    max-width: 300px;
+  }
+}
+@media (min-width: 1400px) {
+  #track_list .single-item__title {
+    max-width: 500px;
+  }
+}
+@media (min-width: 1600px) {
+  #track_list .single-item__title {
+    max-width: 700px;
+  }
+}
+@media (min-width: 1800px) {
+  #track_list .single-item__title {
+    max-width: 900px;
+  }
+}
+.track-item__cover {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: 0.5s ease;
+  width: 48px;
+}
+.track-item__cover svg {
+  color: #25a56a;
+}
+.single-track__number {
+  color: #c0c0c0;
+  margin-left: 10px;
+}
+.release__infos {
+  margin-top: 15px;
+  color: #c0c0c0;
+  text-align: center;
 }

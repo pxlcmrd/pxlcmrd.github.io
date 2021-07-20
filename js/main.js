@@ -6,13 +6,20 @@ document.getElementsByClassName('header__action--search')[0].getElementsByTagNam
     document.getElementsByClassName('header__search')[0].classList.add('header__search--active');
 });
 
-var conteudo_releases = alasql("SELECT * FROM ? ORDER BY RANDOM() LIMIT 24", [list]).reduce(function(a, v) {
+Scrollbar.init(document.querySelector('.release__list'), {
+    damping: 0.1,
+    renderByPixels: true,
+    alwaysShowTracks: true,
+    continuousScrolling: true
+});
+
+var conteudo_releases = alasql("SELECT * FROM ? ORDER BY RANDOM() LIMIT 12", [list]).reduce(function(a, v) {
     return a +
         '<div class="col-6 col-sm-4 col-lg-2">' +
         '  <div class="album">' +
         '    <div class="album__cover">' +
         '      <img src="img/' + v.id + '.jpg" onerror="this.src=\'img/no-image.png\'">' +
-        '      <a href="release.html">' +
+        '      <a href="#">' +
         '        <i class="fas fa-2x fa-search-plus"></i>' +
         '      </a>' +
         '      <span class="album__stat">' +
@@ -86,10 +93,6 @@ list.forEach(function(e) {
             nome += ' ' + (f.descriptions.indexOf("LP") >= 0 ? '12"' : f.descriptions[0]);
         }
 
-        if (nome == "Vinyl Album" || nome == "Vinyl Compilation") {
-            debugger;
-        }
-
         if (!formatos[nome]) {
             formatos[nome] = 1;
         } else {
@@ -140,4 +143,60 @@ for (var i = 0; i < 5; i++) {
 }
 
 document.getElementById("top_generos").innerHTML = conteudo_generos;
+
 document.getElementById("top_formatos").innerHTML = conteudo_formatos;
+
+
+function carregaAlbum(index) {
+    document.getElementsByClassName("main__title--page")[0].innerHTML = '<h1>' + list[index].artists_sort + ' &ndash; ' + list[index].title + '</h1>';
+    document.getElementsByClassName("release__content")[0].innerHTML =
+        '<div class="release__cover">' +
+        '  <img src="img/' + list[index].id + '.jpg" onerror="this.src=\'img/no-image.png\'">' +
+        '</div>' +
+        '<div class="release__stat">' +
+        '  <span>' +
+        '    <i class="fas fa-list"></i> ' + (list[index].tracklist ? list[index].tracklist.length + ' faixa' + (list[index].tracklist.length > 1 ? 's' : '') : '-') +
+        '  </span>' +
+        '  <span>' +
+        '    <i class="far fa-star"></i> ' + list[index].community.rating.average +
+        '  </span>' +
+        '</div>' +
+        '<div class="row row--grid release__infos">' +
+        '  <div class="col-4">' +
+        '    <i class="fas fa-2x fa-' + (
+            list[index].formats[0].name == 'Box Set' ? 'album-collection' :
+            list[index].formats[0].name == 'Cassette' ? 'cassette-tape' :
+            list[index].formats[0].name == 'Vinyl' || list[index].formats[0].name == 'Shellac' ? 'record-vinyl' :
+            list[index].formats[0].name == 'CD' || list[index].formats[0].name == 'CDr' || list[index].formats[0].name == 'DVD' ? 'compact-disc' : 'album'
+        ) + '" title="' + list[index].formats[0].name + '"></i>' +
+        '  </div>' +
+        '  <div class="col-4">' +
+        '    ' + (list[index].country || '') +
+        '  </div>' +
+        '  <div class="col-4">' +
+        '    ' + (list[index].lancamento || '') +
+        '  </div>' +
+        '</div>';
+
+    document.getElementById("track_list").innerHTML = list[index].tracklist.reduce(function(a, v) {
+        return a +
+            '<li class="single-item">' +
+            '  <div class="track-item__cover">' +
+            (v.type_ == "track" ? '    <i class="fal fa-2x fa-music"></i>' : '') +
+            '  </div>' +
+            '  <div class="single-track">' +
+            '    <span class="single-track__number">' + v.position + '</span>' +
+            '  </div>' +
+            '  <div class="single-item__title">' +
+            '    <h4>' + v.title + '</h4>' +
+            '    <span>' + (v.artists && v.artists.length ? v.artists.reduce(function(a_, v_) {
+                return a_ + v_.name;
+            }, '') : '') + '</span>' +
+            '  </div>' +
+            '  <span class="single-item__time">' + (v.duration || '') +
+            '  </span>' +
+            '</li>';
+    }, '');
+}
+
+carregaAlbum(5);
