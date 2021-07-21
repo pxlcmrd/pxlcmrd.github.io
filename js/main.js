@@ -6,7 +6,8 @@ var main = (function Main() {
         keys: [
             "title",
             "artists_sort",
-            "tracklist.title"
+            "tracklist.title",
+            "tracklist.artists.name"
         ]
     });
 
@@ -250,10 +251,16 @@ var main = (function Main() {
             $('.header__search').addClass('header__search--active').find('input').select();
         });
 
+        $('.header__search').on('submit', function(evt) {
+            evt.preventDefault();
+            return false;
+        });
+
         $(document).on('click', 'a', function(evt) {
             evt.preventDefault();
             if ($(this).hasClass('show_album')) {
                 $this.renderAlbum(Number($(this).attr('href')));
+                $(document).scrollTop(0);
             }
         });
 
