@@ -124,24 +124,26 @@
 		</div>
 		<main class="main">
 			<div class="container-fluid">
-				<div class="row row--grid">
-					<!-- title -->
-					<div class="col-12">
-						<div class="main__title main__title--page">
-						</div>
-					</div>
-					<!-- end title -->
-					<div class="col-12">
-						<div class="release">
-							<div class="release__content">
-							</div>
-							<div class="release__list" data-scrollbar="true" tabindex="-1" style="overflow: hidden; outline: currentcolor none medium;">
-								<ul id="track_list" class="main__list main__list--playlist main__list--dashbox">
-								</ul>
+				<section id="album" class="hide">
+					<div class="row row--grid">
+						<!-- title -->
+						<div class="col-12">
+							<div class="main__title main__title--page">
 							</div>
 						</div>
+						<!-- end title -->
+						<div class="col-12">
+							<div class="release">
+								<div class="release__content">
+								</div>
+								<div class="release__list" data-scrollbar="true" tabindex="-1" style="overflow: hidden; outline: currentcolor none medium;">
+									<ul id="track_list" class="main__list main__list--playlist main__list--dashbox">
+									</ul>
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>
+				</section>
 				<!-- releases -->
 				<section id="releases" class="row row--grid">
 					<!-- title -->
@@ -214,6 +216,7 @@
 				</section>
 			</div>
 		</main>
+		<script src="js/jquery.slim.min.js"></script>
 		<script src="js/bootstrap.bundle.min.js"></script>
 		<script src="js/smooth-scrollbar.js"></script>
 		<script src="js/alasql.min.js"></script>

@@ -1,12 +1,38 @@
-document.getElementsByClassName('header__search')[0].getElementsByClassName('close')[0].addEventListener('click', function() {
-    document.getElementsByClassName('header__search')[0].classList.remove('header__search--active');
+function getNomeFormato(format) {
+    var nome;
+
+    if (format.name == 'Vinyl') {
+        nome = 'Vinil' + ' ' + (format.descriptions.indexOf("LP") >= 0 ? '12"' : format.descriptions[0]);
+    } else if (format.name == 'Cassette') {
+        nome = 'K7';
+    } else if (format.name == 'Shellac') {
+        nome = '78 RPM';
+    } else if (format.name == 'CD' || format.name == 'CDr' || format.name == 'DVD' || format.name == 'Box Set') {
+        nome = format.name;
+    } else {
+        console.warn('Formato desconhecido: ' + format.name);
+        nome = format.name;
+    }
+
+    return nome;
+}
+
+$('.header__search .close').on('click', function() {
+    $('.header__search').removeClass('header__search--active');
 });
 
-document.getElementsByClassName('header__action--search')[0].getElementsByTagName('button')[0].addEventListener('click', function() {
-    document.getElementsByClassName('header__search')[0].classList.add('header__search--active');
+$('.header__action--search button').on('click', function() {
+    $('.header__search').addClass('header__search--active');
 });
 
-Scrollbar.init(document.querySelector('.release__list'), {
+$(document).on('click', 'a', function(evt) {
+    evt.preventDefault();
+    if ($(this).hasClass('show_album')) {
+        carregaAlbum(Number($(this).attr('href')));
+    }
+});
+
+Scrollbar.init($('.release__list')[0], {
     damping: 0.1,
     renderByPixels: true,
     alwaysShowTracks: true,
@@ -19,7 +45,7 @@ var conteudo_releases = alasql("SELECT * FROM ? ORDER BY RANDOM() LIMIT 12", [li
         '  <div class="album">' +
         '    <div class="album__cover">' +
         '      <img src="img/' + v.id + '.jpg" onerror="this.src=\'img/no-image.png\'">' +
-        '      <a href="#">' +
+        '      <a class="show_album" href="' + v.id + '">' +
         '        <i class="fas fa-2x fa-search-plus"></i>' +
         '      </a>' +
         '      <span class="album__stat">' +
@@ -33,19 +59,17 @@ var conteudo_releases = alasql("SELECT * FROM ? ORDER BY RANDOM() LIMIT 12", [li
         '    </div>' +
         '    <div class="album__title">' +
         '      <h3>' +
-        '      <a href="release.html">' + v.title +
-        '      </a>' +
+        '        <a class="show_album" href="' + v.id + '">' + v.title + '</a>' +
         '      </h3>' +
         '      <span>' +
-        '        <a href="artist.html">' + v.artists_sort +
-        '        </a>' +
+        '        <a href="artist.html">' + v.artists_sort + '</a>' +
         '      </span>' +
         '    </div>' +
         '  </div>' +
         '</div>';
 }, '');
 
-document.getElementById("releases").innerHTML = document.getElementById("releases").innerHTML + conteudo_releases;
+$("#releases").append(conteudo_releases);
 
 var conteudo_artistas = alasql("SELECT *, count(*) AS num FROM ? WHERE artists_sort != 'Various' GROUP BY artists_sort ORDER BY num DESC LIMIT 5", [list]).reduce(function(a, v, i) {
     return a +
@@ -71,9 +95,7 @@ var conteudo_artistas = alasql("SELECT *, count(*) AS num FROM ? WHERE artists_s
         '</li>';
 }, '');
 
-//console.log(conteudo_artistas);
-
-document.getElementById("top_artistas").innerHTML = conteudo_artistas;
+$("#top_artistas").html(conteudo_artistas);
 
 var generos = {};
 var formatos = {};
@@ -87,11 +109,7 @@ list.forEach(function(e) {
         }
     });
     e.formats.forEach(function(f) {
-        var nome = f.name;
-
-        if (f.descriptions && nome == "Vinyl") {
-            nome += ' ' + (f.descriptions.indexOf("LP") >= 0 ? '12"' : f.descriptions[0]);
-        }
+        var nome = getNomeFormato(f);
 
         if (!formatos[nome]) {
             formatos[nome] = 1;
@@ -131,7 +149,7 @@ for (var i = 0; i < 5; i++) {
 
     conteudo_formatos +=
         '<li class="single-item">' +
-        '<i class="fas fa-2x fa-' + (top5_formatos[i].indexOf('Vinyl') > -1 ? 'record-vinyl' : top5_formatos[i] == 'Cassette' ? 'cassette-tape' : 'compact-disc') + '"></i>' +
+        '  <i class="fas fa-2x fa-' + (top5_formatos[i].indexOf('Vinil') > -1 ? 'record-vinyl' : top5_formatos[i] == 'K7' ? 'cassette-tape' : 'compact-disc') + '"></i>' +
         '  <div class="single-item__title">' +
         '    <h4>' +
         '    ' + top5_formatos[i] +
@@ -142,61 +160,81 @@ for (var i = 0; i < 5; i++) {
         '</li>';
 }
 
-document.getElementById("top_generos").innerHTML = conteudo_generos;
+$("#top_generos").html(conteudo_generos);
 
-document.getElementById("top_formatos").innerHTML = conteudo_formatos;
+$("#top_formatos").html(conteudo_formatos);
 
+function carregaAlbum(id) {
+    function geraHtmlTracks(tracklist, type) {
+        var i, len, artista, html = '';
 
-function carregaAlbum(index) {
-    document.getElementsByClassName("main__title--page")[0].innerHTML = '<h1>' + list[index].artists_sort + ' &ndash; ' + list[index].title + '</h1>';
-    document.getElementsByClassName("release__content")[0].innerHTML =
+        for (i = 0, len = tracklist.length; i < len; i++) {
+            artista = tracklist[i].artists && tracklist[i].artists.length ? tracklist[i].artists.reduce(function(a, v, i) {
+                return a + (i > 0 ? ', ' : '') + v.name;
+            }, '') : '';
+
+            html +=
+                '<li class="single-item single-item__' + (type || tracklist[i].type_) + '">' +
+                '  <div class="track-item__cover">' + (
+                    tracklist[i].type_ == "track" ? '    <i class="fal fa-2x fa-music"></i>' :
+                    tracklist[i].type_ == "index" ? '    <i class="fal fa-2x fa-arrow-alt-right"></i>' :
+                    '') +
+                '  </div>' +
+                '  <div class="single-track">' +
+                '    <span class="single-track__number">' + tracklist[i].position + '</span>' +
+                '  </div>' +
+                '  <div class="single-item__title">' +
+                '    <h4>' + tracklist[i].title + '</h4>' +
+                '    <span>' + artista + '</span>' +
+                '  </div>' +
+                '  <span class="single-item__time">' + (tracklist[i].duration || '') +
+                '  </span>' +
+                '</li>' +
+                (tracklist[i].type_ == "index" ? geraHtmlTracks(tracklist[i].sub_tracks, tracklist[i].type_) : '');
+        }
+
+        return html;
+    }
+
+    var objAlbum, i, len;
+
+    for (i = 0, len = list.length; i < len; i++) {
+        if (list[i].id == id) {
+            objAlbum = list[i];
+            break;
+        }
+    }
+
+    $(".main__title--page").html('<h1>' + objAlbum.artists_sort + ' &ndash; ' + objAlbum.title + '</h1>');
+    $(".release__content").html(
         '<div class="release__cover">' +
-        '  <img src="img/' + list[index].id + '.jpg" onerror="this.src=\'img/no-image.png\'">' +
+        '  <img src="img/' + objAlbum.id + '.jpg" onerror="this.src=\'img/no-image.png\'">' +
         '</div>' +
         '<div class="release__stat">' +
         '  <span>' +
-        '    <i class="fas fa-list"></i> ' + (list[index].tracklist ? list[index].tracklist.length + ' faixa' + (list[index].tracklist.length > 1 ? 's' : '') : '-') +
+        '    <i class="fas fa-list"></i> ' + (objAlbum.tracklist ? objAlbum.tracklist.length + ' faixa' + (objAlbum.tracklist.length > 1 ? 's' : '') : '-') +
         '  </span>' +
         '  <span>' +
-        '    <i class="far fa-star"></i> ' + list[index].community.rating.average +
+        '    <i class="far fa-star"></i> ' + objAlbum.community.rating.average +
         '  </span>' +
         '</div>' +
         '<div class="row row--grid release__infos">' +
-        '  <div class="col-4">' +
+        '  <div class="col-4" title="' + getNomeFormato(objAlbum.formats[0]) + '">' +
         '    <i class="fas fa-2x fa-' + (
-            list[index].formats[0].name == 'Box Set' ? 'album-collection' :
-            list[index].formats[0].name == 'Cassette' ? 'cassette-tape' :
-            list[index].formats[0].name == 'Vinyl' || list[index].formats[0].name == 'Shellac' ? 'record-vinyl' :
-            list[index].formats[0].name == 'CD' || list[index].formats[0].name == 'CDr' || list[index].formats[0].name == 'DVD' ? 'compact-disc' : 'album'
-        ) + '" title="' + list[index].formats[0].name + '"></i>' +
+            objAlbum.formats[0].name == 'Box Set' ? 'album-collection' :
+            objAlbum.formats[0].name == 'Cassette' ? 'cassette-tape' :
+            objAlbum.formats[0].name == 'Vinyl' || objAlbum.formats[0].name == 'Shellac' ? 'record-vinyl' :
+            objAlbum.formats[0].name == 'CD' || objAlbum.formats[0].name == 'CDr' || objAlbum.formats[0].name == 'DVD' ? 'compact-disc' : 'album'
+        ) + '"></i>' +
         '  </div>' +
         '  <div class="col-4">' +
-        '    ' + (list[index].country || '') +
+        '    ' + (objAlbum.country || '') +
         '  </div>' +
         '  <div class="col-4">' +
-        '    ' + (list[index].lancamento || '') +
+        '    ' + (objAlbum.lancamento || '') +
         '  </div>' +
-        '</div>';
+        '</div>');
 
-    document.getElementById("track_list").innerHTML = list[index].tracklist.reduce(function(a, v) {
-        return a +
-            '<li class="single-item">' +
-            '  <div class="track-item__cover">' +
-            (v.type_ == "track" ? '    <i class="fal fa-2x fa-music"></i>' : '') +
-            '  </div>' +
-            '  <div class="single-track">' +
-            '    <span class="single-track__number">' + v.position + '</span>' +
-            '  </div>' +
-            '  <div class="single-item__title">' +
-            '    <h4>' + v.title + '</h4>' +
-            '    <span>' + (v.artists && v.artists.length ? v.artists.reduce(function(a_, v_) {
-                return a_ + v_.name;
-            }, '') : '') + '</span>' +
-            '  </div>' +
-            '  <span class="single-item__time">' + (v.duration || '') +
-            '  </span>' +
-            '</li>';
-    }, '');
+    $("#track_list").html(geraHtmlTracks(objAlbum.tracklist));
+    $("#album").show();
 }
-
-carregaAlbum(5);

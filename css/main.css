@@ -6185,3 +6185,12 @@ body::-webkit-scrollbar-thumb {
   color: #c0c0c0;
   text-align: center;
 }
+.hide {
+  display: none;
+}
+.single-item__index .track-item__cover {
+  margin-left: 50px;
+}
+.single-item__heading h4 {
+  font-style: italic;
+}
