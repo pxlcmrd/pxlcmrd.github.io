@@ -131,33 +131,37 @@ var conteudo_generos = "";
 var conteudo_formatos = "";
 
 for (var i = 0; i < 5; i++) {
-    conteudo_generos +=
-        '<li class="single-item">' +
-        '<i class="far fa-2x fa-' + (
-            top5_generos[i] == 'MPB' ? 'guitar' :
-            top5_generos[i] == 'Pop Rock' ? 'guitar-electric' :
-            top5_generos[i] == 'Synth-pop' ? 'piano-keyboard' :
-            top5_generos[i] == 'Prog Rock' ? 'guitars' :
-            top5_generos[i] == 'Samba' ? 'drum' : 'microphone-stand'
-        ) + '"></i>' +
-        '  <div class="single-item__title">' +
-        '    <h4>' + top5_generos[i] + '</h4>' +
-        '  </div>' +
-        '  <span class="single-item__time">' + generos[top5_generos[i]] +
-        '  </span>' +
-        '</li>';
+    if (top5_generos[i]) {
+        conteudo_generos +=
+            '<li class="single-item">' +
+            '<i class="far fa-2x fa-' + (
+                top5_generos[i] == 'MPB' ? 'guitar' :
+                top5_generos[i] == 'Pop Rock' ? 'guitar-electric' :
+                top5_generos[i] == 'Synth-pop' ? 'piano-keyboard' :
+                top5_generos[i] == 'Prog Rock' ? 'guitars' :
+                top5_generos[i] == 'Samba' ? 'drum' : 'microphone-stand'
+            ) + '"></i>' +
+            '  <div class="single-item__title">' +
+            '    <h4>' + top5_generos[i] + '</h4>' +
+            '  </div>' +
+            '  <span class="single-item__time">' + generos[top5_generos[i]] +
+            '  </span>' +
+            '</li>';
+    }
 
-    conteudo_formatos +=
-        '<li class="single-item">' +
-        '  <i class="fas fa-2x fa-' + (top5_formatos[i].indexOf('Vinil') > -1 ? 'record-vinyl' : top5_formatos[i] == 'K7' ? 'cassette-tape' : 'compact-disc') + '"></i>' +
-        '  <div class="single-item__title">' +
-        '    <h4>' +
-        '    ' + top5_formatos[i] +
-        '    </h4>' +
-        '  </div>' +
-        '  <span class="single-item__time">' + formatos[top5_formatos[i]] +
-        '  </span>' +
-        '</li>';
+    if (top5_formatos[i]) {
+        conteudo_formatos +=
+            '<li class="single-item">' +
+            '  <i class="fas fa-2x fa-' + (top5_formatos[i].indexOf('Vinil') > -1 ? 'record-vinyl' : top5_formatos[i] == 'K7' ? 'cassette-tape' : 'compact-disc') + '"></i>' +
+            '  <div class="single-item__title">' +
+            '    <h4>' +
+            '    ' + top5_formatos[i] +
+            '    </h4>' +
+            '  </div>' +
+            '  <span class="single-item__time">' + formatos[top5_formatos[i]] +
+            '  </span>' +
+            '</li>';
+    }
 }
 
 $("#top_generos").html(conteudo_generos);
