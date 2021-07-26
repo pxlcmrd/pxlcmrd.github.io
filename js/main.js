@@ -11,23 +11,192 @@ var main = (function Main() {
         ]
     });
 
-    function getNomeFormato(format) {
-        var nome;
+    var ordena = function() {
+        var lista = JSON.parse(JSON.stringify(list));
+        //Lista de releases especiais que precisam ser tratados diferenciadamente
+        var arrTrilhas = [2143936, 2693281, 7555262, 7676934, 11127346, 11490895, 12754176, 12774862, 13446777, 14890131];
+        var arrNovelas = [221276, 517593, 1348132, 4325218, 1361899, 1378901, 1788971, 2211613, 2413935, 2520470, 2520504, 2533013, 2590676, 2633561, 2658406, 2812048, 5211379, 10771082];
 
-        if (format.name == 'Vinyl') {
-            nome = 'Vinil' + ' ' + (format.descriptions.indexOf("LP") >= 0 ? '12"' : format.descriptions[0]).replace('"', '&quot;');
-        } else if (format.name == 'Cassette') {
-            nome = 'K7';
-        } else if (format.name == 'Shellac') {
-            nome = '78 RPM';
-        } else if (format.name == 'CD' || format.name == 'CDr' || format.name == 'DVD' || format.name == 'Box Set') {
-            nome = format.name;
-        } else {
-            console.warn('Formato desconhecido: ' + format.name);
-            nome = format.name;
+        /**
+         * @description Limpa a string de caracteres especiais ou termos indesejáveis para a função de ordenação
+         * @name limpaStr
+         * @param  {string} s String chave usada na ordenação
+         * @return {string}   Retorna a string pronta para ser usada na ordenação
+         */
+        function limpaStr(s) {
+            return s.replace(/[áÁãÃâÂàÀ]/g, 'a').
+            replace(/[éÉẽẼêÊèÈ]/g, 'e').
+            replace(/[íÍĩĨêÎìÌ]/g, 'i').
+            replace(/[óÓõÕôÔ]/g, 'o').
+            replace(/[úÚüÜ]/g, 'u').
+            replace(/[çÇ]/g, 'c').
+            replace(/[ßαΑβΒºª©®™∇µμ◘“”‘’´È¹²³¬°–—¯…¦−]/g, '').
+            replace(/^(The|o|a|os|as|los|las|el|l') /gmi, '').trim().toLowerCase();
         }
 
-        return nome;
+        /**
+         * @description Confere casos excepcionais em que o nome do artista deve ser substituído (traduções ou critério 4.1)
+         * @name verificaArtistasEspeciais
+         * @param  {Release} r Objeto do release
+         * @return {string}    Retorna o nome do artista como deve ser considerado na coleção
+         */
+        function verificaArtistasEspeciais(r) {
+            //Verifica casos de tradução de nome
+            if (r.id == 14996403 || r.id == 14970948) {
+                return 'Molchat Doma';
+            }
+
+            //Verifica títulos mais consagrados do que o crédito no artista
+            //       Doces Bárbaros         //Psicopretas
+            if (r.id == 9299219 || r.id == 13770359) {
+                return r.title;
+            }
+
+            //Verifica nomes que exigem substituição (Detalhes de créditos)
+            if (r.id == 3696794 || r.id == 4699464) {
+                return 'Raul Seixas';
+            } else if (r.id == 3677642 || r.id == 1373314) {
+                return 'Santa Esmeralda';
+            } else if (r.id == 15421432) {
+                return 'Tito Madi';
+            } else if (r.artists_sort == 'Raimundo Fagner') {
+                return 'Fagner';
+            }
+
+            //Verifica nomes com algarismos
+            if (/^\b\d+\b/.test(r.artists_sort)) {
+                var num = r.artists_sort.replace(/^(\b\d+\b).*/, '$1');
+                num = ('000000000' + num).slice(-9);
+                return r.artists_sort.replace(/^\b\d+\b(.*)/, num + '$1');
+            }
+
+            //Verifica Vários e desconhecidos ou trilha sonoras
+            if (r.artists_sort == 'Various' || r.artists_sort == 'Unknown Artist' || arrTrilhas.indexOf(Number(r['id'])) > 0 || arrNovelas.indexOf(Number(r['id'])) > 0) {
+                return r.title;
+            }
+
+            return r.artists_sort;
+        }
+
+        /**
+         * @description Separa os compactos para o final da lista
+         * @name verificaFormato
+         * @param  {Release} r Objeto do release
+         * @return {string}    Se for compacto retorna um string '~' para garantir que a chave de ordenação seja movida para o final da lista
+         */
+        function verificaFormato(r) {
+            //validação para releases tadicionais, mas com 7" de bônus;
+            var arrExcecoes = [15867373, 16259523];
+            if (/7"/.test(r.formats.reduce(function(a, v) {
+                    return (a ? ',' : '') + a + v.name + (v.descriptions && v.descriptions.length ? v.descriptions.reduce(function(ad, vd) {
+                        return ad + ',' + vd;
+                    }, '') : '');
+                }, '')) && arrExcecoes.indexOf(Number(r.id)) < 0) {
+                return '~';
+            } else {
+                return '}';
+            }
+        }
+
+        function verificaTrilhaSonora(r) {
+            if (arrTrilhas.indexOf(Number(r.id)) >= 0) {
+                return '~}';
+            } else if (arrNovelas.indexOf(Number(r.id)) >= 0) {
+                return '~~' + limpaStr(r.title);
+            }
+
+            return '}';
+        }
+
+        function verificaVariosDesconhecidos(r) {
+            //Exceções como álbuns de tributos
+            var arrExcecoes = [15421432, 13770359];
+            if ((r.artists_sort == 'Various' || r.artists_sort == 'Unknown Artist') && arrExcecoes.indexOf(Number(r.id)) < 0 && arrTrilhas.indexOf(Number(r.id)) < 0 && arrNovelas.indexOf(Number(r.id) < 0)) {
+                return '~';
+            } else {
+                return '}';
+            }
+        }
+
+        /**
+         * @description Compara 2 lançamentos 'a' e 'b' e indica qual deve vir antes na lista.
+         * Os critérios devem ser:
+         * v   1. Duas categorias principais, I e II, sendo descritas e ordenadas conforme a seguir:
+         * v       1.1. Categoria I: LPs, 12" e 10";
+         * v       1.2. Categoria II: 7",
+         *    2. Categoria I deve ser dividida e ordenada conforme a seguir:
+         * v      2.1. Principais: Lançamentos comuns de um artista ou conjunto que não se enquadram nas categorias abaixo;
+         *        2.2. Vários artistas: Lançamentos comuns que contém vários artistas ou conjuntos ou artistas desconhecidos que não seja álbum de tributo e que não se enquadram nas categorias abaixo;
+         *        2.3. Compilações: Lançamentos com apanhado de trilhas não inéditas (que pertencem a produtos lançados previamente). Não inclui compilações de conteúdos inéditos nem lançamentos que se enquadram nas categorias abaixo;
+         * v      2.4. Trilhas sonoras: Lançamentos que compreendem a trilha sonora de uma produção. Deve ser subcategorizado e ordenado como a seguir:
+         * v          2.4.1. Produções: Trilhas de filmes, jogos, séries, programas televisivos, etc;
+         * v          2.4.2. Novelas: Trilhas de novelas.
+         *    3. Todas categorias e subcategorias, exceto quando particularmente especificados, devem obedecer os seguintes critérios:
+         * v      3.1. Não deve diferenciar letras maiúsculas de minúsculas;
+         * v      3.2. Não deve diferenciar acentos gráficos e caracteres especiais;
+         * v      3.3. Não deve considerar artigos;
+         * v      3.4. Números devem ser considerados sua ordem de grandeza, não alfabética;
+         * v      3.5. Ordem alfabética de artistas;
+         * v      3.6. Ordem de data de lançamento original do álbum;
+         *    4. Casos particulares são os seguintes:
+         *        4.1. Casos 2.2 em que o lançamento é tão importante, ou seja, quando seu título assume sua própria identidade, devem considerar o título no lugar do artista e serem alocados na categoria 2.1;
+         *        4.2. Casos 2.4 devem ser ordenados pelo título do album, de acordo com os critérios 3.1 até 3.4
+         *
+         * @name criterioOrdenacao
+         * @param  {Release} a
+         * @param  {Release} b
+         * @return {number}  Retorna -1 se 'a' deve vir antes de 'b', 1 se deve vir depois ou 0 se a posição não deve ser mudada
+         */
+        function criterioOrdenacao(a, b) {
+            var separator = String.fromCharCode(29);
+
+            //monta a string que serve de chave para ordenação
+            var auxa = verificaArtistasEspeciais(a) + separator + a['Collection Lançamento'] + separator + a.title;
+            var auxb = verificaArtistasEspeciais(b) + separator + b['Collection Lançamento'] + separator + b.title;
+
+            //Limpa a string de caracteres indesejáveis
+            auxa = limpaStr(auxa);
+            auxb = limpaStr(auxb);
+
+            //Verifica os lançamentos de vários artitas ou desconhecidos
+            auxa = verificaVariosDesconhecidos(a) + auxa;
+            auxb = verificaVariosDesconhecidos(b) + auxb;
+
+            //Joga as trilha sonoras para o final da lista principal
+            auxa = verificaTrilhaSonora(a) + auxa;
+            auxb = verificaTrilhaSonora(b) + auxb;
+
+            //Se o formato for compacto joga para o final da lista
+            auxa = verificaFormato(a) + auxa;
+            auxb = verificaFormato(b) + auxb;
+
+            if (auxa < auxb) {
+                return -1;
+            } else if (auxa > auxb) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        //Ordena a lista
+        lista.sort(criterioOrdenacao);
+        return lista;
+    };
+
+    function getNomeFormato(format) {
+        if (format.name == 'Vinyl') {
+            return 'Vinil' + ' ' + (format.descriptions.indexOf("LP") >= 0 ? '12"' : format.descriptions[0]).replace('"', '&quot;');
+        } else if (format.name == 'Cassette') {
+            return 'K7';
+        } else if (format.name == 'Shellac') {
+            return '78 RPM';
+        } else if (format.name == 'CD' || format.name == 'CDr' || format.name == 'DVD' || format.name == 'Box Set') {
+            return format.name;
+        } else {
+            console.warn('Formato desconhecido: ' + format.name);
+            return format.name;
+        }
     }
 
     function geraHtmlTracks(tracklist, type) {
@@ -133,7 +302,7 @@ var main = (function Main() {
                 '</div>';
         }
 
-        return html
+        return html;
     }
 
     function geraHtmlTop5Artistas() {
@@ -261,6 +430,25 @@ var main = (function Main() {
             if ($(this).hasClass('show_album')) {
                 $this.renderAlbum(Number($(this).attr('href')));
                 $(document).scrollTop(0);
+            } else if ($(this).attr('href') == 'home') {
+                $('.sidebar__nav .sidebar__nav-link--active').removeClass('sidebar__nav-link--active');
+                $(this).addClass('sidebar__nav-link--active');
+                $('section').hide();
+                $('#releases, #top_lista').show();
+            } else if ($(this).attr('href') == 'lista_ordenada') {
+                $('.sidebar__nav .sidebar__nav-link--active').removeClass('sidebar__nav-link--active');
+                $(this).addClass('sidebar__nav-link--active');
+                $('section').hide();
+                $('#lista_ordenada').show().find('#tabela_lista_ordenada tbody').html(ordena().reduce(function(a, v, i) {
+                    return a +
+                        '<tr>\n' +
+                        '  <th scope="row">' + (i + 1) + '</th>\n' +
+                        '  <td>' + v.artists_sort + '</td>\n' +
+                        '  <td>' + v.title + '</td>\n' +
+                        '  <td>' + v.lancamento + '</td>\n' +
+                        '  <td>' + getNomeFormato(v.formats[0]) + '</td>\n' +
+                        '</tr>\n';
+                }, ''));
             }
         });
 

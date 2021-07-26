@@ -99,24 +99,27 @@
 			<!-- sidebar nav -->
 			<ul class="sidebar__nav">
 				<li class="sidebar__nav-item">
-					<a href="index.html" class="sidebar__nav-link sidebar__nav-link--active">
+					<a href="home" class="sidebar__nav-link sidebar__nav-link--active">
 						<i class="fas fa-home"></i>
-						<span>Home
-						</span>
+						<span>Home</span>
+					</a>
+				</li>
+				<li class="sidebar__nav-item">
+					<a href="lista_ordenada" class="sidebar__nav-link">
+						<i class="far fa-th-list"></i>
+						<span>Lista ordenada</span>
 					</a>
 				</li>
 				<li class="sidebar__nav-item">
 					<a href="artists.html" class="sidebar__nav-link">
 						<i class="far fa-user-friends"></i>
-						<span>Artistas
-						</span>
+						<span>Artistas</span>
 					</a>
 				</li>
 				<li class="sidebar__nav-item">
 					<a href="releases.html" class="sidebar__nav-link">
 						<i class="far fa-album-collection"></i>
-						<span>&Aacute;lbuns
-						</span>
+						<span>&Aacute;lbuns</span>
 					</a>
 				</li>
 			</ul>
@@ -124,6 +127,32 @@
 		</div>
 		<main class="main">
 			<div class="container-fluid">
+				<section id="lista_ordenada" class="hide">
+					<div class="row row--grid">
+						<!-- title -->
+						<div class="col-12">
+							<div class="main__title main__title--page">
+								<h2>Lista ordenada</h2>
+							</div>
+						</div>
+						<!-- end title -->
+						<div class="col-12">
+							<table class="table" id="tabela_lista_ordenada">
+								<thead>
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">Artista</th>
+										<th scope="col">T&iacute;tulo</th>
+										<th scope="col">Data</th>
+										<th scope="col">Formato</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</section>
 				<section id="album" class="hide">
 					<div class="row row--grid">
 						<!-- title -->

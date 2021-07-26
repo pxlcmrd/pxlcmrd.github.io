@@ -6194,3 +6194,7 @@ body::-webkit-scrollbar-thumb {
 .single-item__heading h4 {
   font-style: italic;
 }
+
+#tabela_lista_ordenada th, #tabela_lista_ordenada td {
+  color: #FFF;
+}
