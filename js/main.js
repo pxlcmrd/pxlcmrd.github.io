@@ -3,12 +3,20 @@ var main = (function Main() {
 
     var fuse = new Fuse(list, {
         threshold: 0.4,
-        keys: [
-            "title",
-            "artists_sort",
-            "tracklist.title",
-            "tracklist.artists.name"
-        ]
+        includeMatches: true,
+        keys: [{
+            name: "title",
+            weight: 4
+        }, {
+            name: "artists_sort",
+            weight: 2
+        }, {
+            name: "tracklist.title",
+            weight: 4
+        }, {
+            name: "tracklist.artists.name",
+            weight: 2
+        }]
     });
 
     var ordena = function() {
@@ -85,13 +93,18 @@ var main = (function Main() {
          * @return {string}    Se for compacto retorna um string '~' para garantir que a chave de ordenação seja movida para o final da lista
          */
         function verificaFormato(r) {
-            //validação para releases tadicionais, mas com 7" de bônus;
-            var arrExcecoes = [15867373, 16259523];
-            if (/7"/.test(r.formats.reduce(function(a, v) {
-                    return (a ? ',' : '') + a + v.name + (v.descriptions && v.descriptions.length ? v.descriptions.reduce(function(ad, vd) {
-                        return ad + ',' + vd;
-                    }, '') : '');
-                }, '')) && arrExcecoes.indexOf(Number(r.id)) < 0) {
+            var formatos = r.formats.reduce(function(a, v) {
+                a.push(v.name);
+                if (v.descriptions && v.descriptions.length) {
+                    v.descriptions.reduce(function(f, d) {
+                        f.push(d);
+                        return f;
+                    }, a);
+                }
+                return a;
+            }, []).join();
+
+            if (/7"/.test(formatos) && !/(LP|12")/.test(formatos)) {
                 return '~';
             } else {
                 return '}';
@@ -151,8 +164,8 @@ var main = (function Main() {
             var separator = String.fromCharCode(29);
 
             //monta a string que serve de chave para ordenação
-            var auxa = verificaArtistasEspeciais(a) + separator + a['Collection Lançamento'] + separator + a.title;
-            var auxb = verificaArtistasEspeciais(b) + separator + b['Collection Lançamento'] + separator + b.title;
+            var auxa = verificaArtistasEspeciais(a) + separator + a.lancamento + separator + a.title;
+            var auxb = verificaArtistasEspeciais(b) + separator + b.lancamento + separator + b.title;
 
             //Limpa a string de caracteres indesejáveis
             auxa = limpaStr(auxa);
@@ -268,10 +281,30 @@ var main = (function Main() {
     }
 
     function geraHtmlListaAlbums(listaAlbums) {
+        function formatMatch(match) {
+            function grifa(str, s_idx, f_idx) {
+                return str.slice(0, s_idx) + '<b>' + str.slice(s_idx, f_idx) + '</b>' + str.slice(f_idx);
+            }
+
+            var txt = match.value;
+            for (var i = match.indices.length - 1; i >= 0; i--) {
+                txt = grifa(txt, match.indices[i][0], match.indices[i][1] + 1);
+            }
+
+            return txt;
+        }
+
         var album, html = "";
+        var is_busca = false;
+
         for (var i = 0, len = Math.min(listaAlbums.length, 24); i < len; i++) {
             //Caso a lista seja do Fuse ou Alasql
-            album = listaAlbums[i].item || listaAlbums[i];
+            if (listaAlbums[i].item) {
+                is_busca = true;
+                album = listaAlbums[i].item;
+            } else {
+                album = listaAlbums[i];
+            }
 
             html +=
                 '<div class="col-6 col-sm-4 col-lg-2">' +
@@ -292,10 +325,10 @@ var main = (function Main() {
                 '    </div>' +
                 '    <div class="album__title">' +
                 '      <h3>' +
-                '        <a class="show_album" href="' + album.id + '">' + album.title + '</a>' +
+                '        <a class="show_album" href="' + album.id + '">' + (is_busca && listaAlbums[i].matches[0].key == 'title' ? formatMatch(listaAlbums[i].matches[0]) : album.title) + '</a>' +
                 '      </h3>' +
                 '      <span>' +
-                '        <a href="artist.html">' + album.artists_sort + '</a>' +
+                '        <a href="artist.html">' + (is_busca && listaAlbums[i].matches[0].key == 'artists_sort' ? formatMatch(listaAlbums[i].matches[0]) : album.artists_sort) + '</a>' +
                 '      </span>' +
                 '    </div>' +
                 '  </div>' +
