@@ -426,19 +426,22 @@ var main = (function Main() {
         });
 
         $(document).on('click', 'a', function(evt) {
+            function resetButtons($el) {
+                $('.header__btn').toggleClass('header__btn--active');
+                $('.sidebar').toggleClass('sidebar--active');
+                $('.sidebar__nav .sidebar__nav-link--active').removeClass('sidebar__nav-link--active');
+                $(this).addClass('sidebar__nav-link--active');
+                $('section').hide();
+            }
             evt.preventDefault();
             if ($(this).hasClass('show_album')) {
                 $this.renderAlbum(Number($(this).attr('href')));
                 $(document).scrollTop(0);
             } else if ($(this).attr('href') == 'home') {
-                $('.sidebar__nav .sidebar__nav-link--active').removeClass('sidebar__nav-link--active');
-                $(this).addClass('sidebar__nav-link--active');
-                $('section').hide();
+                resetButtons($(this));
                 $('#releases, #top_lista').show();
             } else if ($(this).attr('href') == 'lista_ordenada') {
-                $('.sidebar__nav .sidebar__nav-link--active').removeClass('sidebar__nav-link--active');
-                $(this).addClass('sidebar__nav-link--active');
-                $('section').hide();
+                resetButtons($(this));
                 $('#lista_ordenada').show().find('#tabela_lista_ordenada tbody').html(ordena().reduce(function(a, v, i) {
                     return a +
                         '<tr>\n' +
@@ -473,6 +476,11 @@ var main = (function Main() {
             renderByPixels: true,
             alwaysShowTracks: true,
             continuousScrolling: true
+        });
+
+        $('.header__btn').on('click', function() {
+            $(this).toggleClass('header__btn--active');
+            $('.sidebar').toggleClass('sidebar--active');
         });
     }
 

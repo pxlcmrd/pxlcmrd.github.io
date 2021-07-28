@@ -25,7 +25,7 @@ def meanTime():
 def getListaAtual():
     try:
         #tenta abrir o arquivo de saída se ele existir
-        saidaAntiga = open('js/list.js')
+        saidaAntiga = open('js/list.js', encoding="utf8")
         #carrega o json no python
         return json.loads(saidaAntiga.readline()[11:-1])
     except ValueError:
@@ -61,8 +61,8 @@ def writeFile():
     def getIdSort(release):
         return json.loads(release)['id']
 
-    f = open('js/list.js', '+w')
-    f_min = open('js/list.min.js', '+w')
+    f = open('js/list.js', '+w', encoding="utf8")
+    f_min = open('js/list.min.js', '+w', encoding="utf8")
 
     #Ordena a lista
     releases.sort(key=getIdSort)
@@ -102,7 +102,7 @@ def main():
     #mapeia apenas o id dos releases
     indexListaAtual = list(map(getId, listaAtual))
     #carrega o arquivo csv
-    with open(args.file) as csv_file:
+    with open(args.file, encoding="utf8") as csv_file:
         #inicializa os contadores
         column = 0
         line_count = 0
