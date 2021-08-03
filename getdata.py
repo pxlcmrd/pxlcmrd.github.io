@@ -80,6 +80,26 @@ def main():
 
     def minimizeFile(strJson, lancamento = ""):
         obj = json.loads(strJson)
+
+        #artistas name
+        #         thumbnail_url
+        #         id
+
+        arr_track = []
+        for t in obj['tracklist']:
+            track_obj = {
+                "title": t["title"],
+                "type_": t["type_"]
+            }
+            if t.get("sub_tracks") != None:
+                track_obj["sub_tracks"] =t.get("sub_tracks")
+            if t.get("duration") != "":
+                track_obj["duration"] =t.get("duration")
+            if t.get("position") != "":
+                track_obj["position"] =t.get("position")
+            
+            arr_track.append(track_obj)
+
         return json.dumps({
             "id": obj['id'],
             "title": obj['title'],
@@ -95,7 +115,7 @@ def main():
             "formats": obj['formats'],
             "lancamento": lancamento,
             "artists": obj['artists'],
-            "tracklist": obj['tracklist']
+            "tracklist": arr_track
         }, ensure_ascii=False, separators=(',', ':'))
 
     listaAtual = getListaAtual()
