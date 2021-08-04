@@ -36,7 +36,7 @@ def getListaAtual():
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument('file', metavar='Arquivo CSV', help='arquivo csv da coleção')
-    parser.add_argument('-t', '--token', required=False, dest='token', help='--token [Token (chave) de acesso pessoal para desenvolvedor]')
+    parser.add_argument('-t', '--token', required=False, dest='token', default='PEQJMbWyIhFclTjZKBdCeHQcdgueLISCQNvfqgkO', help='--token [Token (chave) de acesso pessoal para desenvolvedor]')
     return parser.parse_args()
 
 def getRelease(id, token):
