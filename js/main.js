@@ -221,14 +221,14 @@ var main = (function Main() {
             }, '') : '';
 
             html +=
-                '<li class="single-item single-item__' + (type || tracklist[i].type_) + '">' +
+                '<li class="single-item single-item__' + (tracklist[i].sub_tracks ? 'track' : (type || tracklist[i].type_)) + '">' +
                 '  <div class="track-item__cover">' + (
                     tracklist[i].type_ == "track" ? '    <i class="fal fa-2x fa-music"></i>' :
                     tracklist[i].type_ == "index" ? '    <i class="fal fa-2x fa-arrow-alt-right"></i>' :
                     '') +
                 '  </div>' +
                 '  <div class="single-track">' +
-                '    <span class="single-track__number">' + tracklist[i].position + '</span>' +
+                '    <span class="single-track__number">' + (tracklist[i].position || "") + '</span>' +
                 '  </div>' +
                 '  <div class="single-item__title">' +
                 '    <h4>' + tracklist[i].title + '</h4>' +
@@ -248,13 +248,24 @@ var main = (function Main() {
     }
 
     function geraHtmlAlbum(objAlbum) {
+        var num_tracks = objAlbum.tracklist.reduce(function(a, v) {
+            if (v.type_ == 'track') {
+                return a + 1;
+            } else if (v.type_ == 'index' && v.sub_tracks) {
+                return a + v.sub_tracks.reduce(function(a_sub, v_sub) {
+                    return a_sub + (v_sub.type_ == 'track');
+                }, 0);
+            } else {
+                return a;
+            }
+        }, 0);
         var html =
             '<div class="release__cover">' +
             '  <img src="img/' + objAlbum.id + '.jpg" onerror="this.src=\'img/no-image.png\'">' +
             '</div>' +
             '<div class="release__stat">' +
             '  <span>' +
-            '    <i class="fas fa-list"></i> ' + (objAlbum.tracklist ? objAlbum.tracklist.length + ' faixa' + (objAlbum.tracklist.length > 1 ? 's' : '') : '-') +
+            '    <i class="fas fa-list"></i> ' + num_tracks + ' faixa' + (num_tracks > 1 ? 's' : '') +
             '  </span>' +
             '  <span>' +
             '    <i class="far fa-star"></i> ' + objAlbum.community.rating.average +
@@ -316,7 +327,17 @@ var main = (function Main() {
                 '      </a>' +
                 '      <span class="album__stat">' +
                 '        <span>' +
-                '          <i class="fas fa-list"></i> ' + album.tracklist.length +
+                '          <i class="fas fa-list"></i> ' + album.tracklist.reduce(function(a, v) {
+                    if (v.type_ == 'track') {
+                        return a + 1;
+                    } else if (v.type_ == 'index' && v.sub_tracks) {
+                        return a + v.sub_tracks.reduce(function(a_sub, v_sub) {
+                            return a_sub + (v_sub.type_ == 'track');
+                        }, 0);
+                    } else {
+                        return a;
+                    }
+                }, 0) +
                 '        </span>' +
                 '        <span>' +
                 '          <i class="far fa-star"></i> ' + album.community.rating.average +

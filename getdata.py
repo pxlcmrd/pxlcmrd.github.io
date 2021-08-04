@@ -81,24 +81,49 @@ def main():
     def minimizeFile(strJson, lancamento = ""):
         obj = json.loads(strJson)
 
-        #artistas name
-        #         thumbnail_url
-        #         id
+        def minArtist(arrArtist):
+            if arrArtist is None:
+                return []
 
-        arr_track = []
-        for t in obj['tracklist']:
-            track_obj = {
-                "title": t["title"],
-                "type_": t["type_"]
-            }
-            if t.get("sub_tracks") != None:
-                track_obj["sub_tracks"] =t.get("sub_tracks")
-            if t.get("duration") != "":
-                track_obj["duration"] =t.get("duration")
-            if t.get("position") != "":
-                track_obj["position"] =t.get("position")
-            
-            arr_track.append(track_obj)
+            arr_artist = []
+            for artist in arrArtist:
+                arr_artist.append({
+                    "name": artist['name']
+                })
+                if artist.get('anv') != "" and artist.get('anv') is not None:
+                    arr_artist[len(arr_artist) - 1]["anv"] = artist['anv']
+                arr_artist[len(arr_artist) - 1]["id"] = artist['id']
+                if artist.get('thumbnail_url') != "" and artist.get('thumbnail_url') is not None:
+                    arr_artist[len(arr_artist) - 1]["thumbnail_url"] = artist['thumbnail_url']
+
+            return arr_artist
+
+        def minTrack(arrTracks):
+            if arrTracks is None:
+                return []
+
+            arr_tracks = []
+            for t in arrTracks:
+                track_obj = {}
+
+                if t.get("position") != "" and t.get("position") is not None:
+                    track_obj["position"] = t.get("position")
+                if t.get("type_") != "" and t.get("type_") is not None:
+                    track_obj["type_"] = t.get("type_")
+                if t.get("artists") != "" and t.get("artists") is not None:
+                    track_obj["artists"] = minArtist(t.get("artists"))
+                if t.get("title") != "" and t.get("title") is not None:
+                    track_obj["title"] = t.get("title")
+                if t.get("extraartists") != "" and t.get("extraartists") is not None:
+                    track_obj["extraartists"] = minArtist(t.get("extraartists"))
+                if t.get("duration") != "" and t.get("duration") is not None:
+                    track_obj["duration"] = t.get("duration")
+                if t.get("sub_tracks") != "" and t.get("sub_tracks") is not None:
+                    track_obj["sub_tracks"] = minTrack(t.get("sub_tracks"))
+                
+                arr_tracks.append(track_obj)
+
+            return arr_tracks
 
         return json.dumps({
             "id": obj['id'],
@@ -114,8 +139,8 @@ def main():
             },
             "formats": obj['formats'],
             "lancamento": lancamento,
-            "artists": obj['artists'],
-            "tracklist": arr_track
+            "artists": minArtist(obj['artists']),
+            "tracklist": minTrack(obj['tracklist'])
         }, ensure_ascii=False, separators=(',', ':'))
 
     listaAtual = getListaAtual()
