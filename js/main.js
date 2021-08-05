@@ -1,4 +1,5 @@
 var main = (function Main() {
+
     var $this = this;
 
     var fuse = new Fuse(list, {
@@ -6,16 +7,16 @@ var main = (function Main() {
         includeMatches: true,
         keys: [{
             name: "title",
-            weight: 4
+            weight: 1
         }, {
             name: "artists_sort",
-            weight: 2
-        }, {
-            name: "tracklist.title",
             weight: 4
         }, {
+            name: "tracklist.title",
+            weight: 1
+        }, {
             name: "tracklist.artists.name",
-            weight: 2
+            weight: 3
         }]
     });
 
@@ -45,7 +46,7 @@ var main = (function Main() {
         /**
          * @description Confere casos excepcionais em que o nome do artista deve ser substituído (traduções ou critério 4.1)
          * @name verificaArtistasEspeciais
-         * @param  {Release} r Objeto do release
+         * @param  {Releases} r Objeto do release
          * @return {string}    Retorna o nome do artista como deve ser considerado na coleção
          */
         function verificaArtistasEspeciais(r) {
@@ -89,7 +90,7 @@ var main = (function Main() {
         /**
          * @description Separa os compactos para o final da lista
          * @name verificaFormato
-         * @param  {Release} r Objeto do release
+         * @param  {Releases} r Objeto do release
          * @return {string}    Se for compacto retorna um string '~' para garantir que a chave de ordenação seja movida para o final da lista
          */
         function verificaFormato(r) {
@@ -156,8 +157,8 @@ var main = (function Main() {
          *        4.2. Casos 2.4 devem ser ordenados pelo título do album, de acordo com os critérios 3.1 até 3.4
          *
          * @name criterioOrdenacao
-         * @param  {Release} a
-         * @param  {Release} b
+         * @param  {Releases} a
+         * @param  {Releases} b
          * @return {number}  Retorna -1 se 'a' deve vir antes de 'b', 1 se deve vir depois ou 0 se a posição não deve ser mudada
          */
         function criterioOrdenacao(a, b) {
@@ -212,6 +213,12 @@ var main = (function Main() {
         }
     }
 
+    /**
+     * [geraHtmlTracks description]
+     * @param  {Array<Tracks>} tracklist [description]
+     * @param  {string=} type      [description]
+     * @return {string}           [description]
+     */
     function geraHtmlTracks(tracklist, type) {
         var i, len, artista, html = '';
 
@@ -291,7 +298,17 @@ var main = (function Main() {
         return html;
     }
 
+    /**
+     * [geraHtmlListaAlbums description]
+     * @param  {Array<Releases>} listaAlbums
+     * @return {string}
+     */
     function geraHtmlListaAlbums(listaAlbums) {
+        /**
+         * [formatMatch description]
+         * @param  {Match} match
+         * @return {string}
+         */
         function formatMatch(match) {
             function grifa(str, s_idx, f_idx) {
                 return str.slice(0, s_idx) + '<b>' + str.slice(s_idx, f_idx) + '</b>' + str.slice(f_idx);
@@ -555,6 +572,11 @@ var main = (function Main() {
         $("#album").show();
     };
 
+    /**
+     * @description Renderiza a listagem de releases na tela principal
+     * @name renderListaAlbuns
+     * @param  {Array<Releases>} [listaAlbums]
+     */
     $this.renderListaAlbuns = function(listaAlbums) {
         $("#album").hide();
         if (!listaAlbums) {
