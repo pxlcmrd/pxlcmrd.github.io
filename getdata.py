@@ -37,6 +37,8 @@ def parse_args():
     """ Trata os argumentos passados na linha de comando """
     parser = ArgumentParser()
     parser.add_argument('file', metavar='Arquivo CSV', help='arquivo csv da coleção')
+    parser.add_argument('-f', '--force', nargs='+', required=False, dest='force',
+        help='--force [Ids de releases para forçarem a ser baixados e sobrescritos]')
     parser.add_argument('-t', '--token', required=False, dest='token',
         default='PEQJMbWyIhFclTjZKBdCeHQcdgueLISCQNvfqgkO',
         help='--token [Token (chave) de acesso pessoal para desenvolvedor]')
@@ -186,6 +188,8 @@ def main():
             else:
                 #Tenta ver se o release lido do csv já existe no list.js
                 try:
+                    if args.force is not None and args.force.count(row[column]) == 1:
+                        raise ValueError
                     #Se existir ele é reaproveitado
                     releases.append(json.dumps(
                         lista_atual[index_lista_atual.index(int(row[column]))],
