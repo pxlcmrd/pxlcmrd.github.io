@@ -1,257 +1,70 @@
-<!-- Template original https://bootstrap4.com/out/?demo=volna-record-label-music-streaming-html-template -->
 <!DOCTYPE html>
-<html lang="pt-BR">
-	<head>
-		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="css/main.css">
-		<link rel="shortcut icon" href="img/favicon.png">
-		<title>Lista</title>
-	</head>
-	<body>
-		<header class="header">
-			<div class="header__content">
-				<div class="header__logo">
-					<a href="index.html">
-						<img src="img/logo.png" alt="">
-					</a>
-				</div>
-				<form action="#" class="header__search">
-					<input type="text" placeholder="Artista, &aacute;lbum ou faixa">
-					<button type="button">
-					<i class="far fa-search"></i>
-					</button>
-					<button type="button" class="close">
-					<i class="far fa-times"></i>
-					</button>
-				</form>
-				<div class="header__actions">
-					<div class="header__action header__action--search">
-						<button class="header__action-btn" type="button">
-						<i class="far fa-search"></i>
-						</button>
-					</div>
-					<div class="header__action header__action--note">
-						<span>17
-						</span>
-						<a href="#" class="header__action-btn">
-							<i class="far fa-inbox"></i>
-						</a>
-						<div class="header__drop">
-							<a href="#" class="header__all">View all
-							</a>
-							<div class="header__note header__note--succ">
-								<i class="far fa-check-circle"></i>
-								<p>
-									<a href="#modal-info2" class="open-modal">Payment #51
-									</a> was successful!
-								</p>
-								<span>1 hour ago
-								</span>
-							</div>
-							<div class="header__note header__note--fail">
-								<i class="far fa-times-circle"></i>
-								<p>
-									<a href="#modal-info3" class="open-modal">Payment #50
-									</a> failed!
-								</p>
-								<span>2 hours ago
-								</span>
-							</div>
-							<div class="header__note header__note--info">
-								<i class="far fa-info-circle"></i>
-								<p>
-									<a href="#modal-info4" class="open-modal">Example
-									</a> of notification.
-								</p>
-								<span>2 hours ago
-								</span>
-							</div>
-							<div class="header__note header__note--gift">
-								<i class="far fa-gift"></i>
-								<p>
-									<a href="#modal-info5" class="open-modal">You have received a gift!
-									</a>
-								</p>
-								<span>4 hours ago
-								</span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<button class="header__btn" type="button">
-				<span>
-				</span>
-				<span>
-				</span>
-				<span>
-				</span>
-				</button>
-			</div>
-		</header>
-		<div class="sidebar">
-			<!-- sidebar logo -->
-			<div class="sidebar__logo">
-				<img src="img/logo.png" alt="">
-			</div>
-			<!-- end sidebar logo -->
-			<!-- sidebar nav -->
-			<ul class="sidebar__nav">
-				<li class="sidebar__nav-item">
-					<a href="home" class="sidebar__nav-link sidebar__nav-link--active">
-						<i class="fas fa-home"></i>
-						<span>Home</span>
-					</a>
-				</li>
-				<li class="sidebar__nav-item">
-					<a href="lista_ordenada" class="sidebar__nav-link">
-						<i class="far fa-th-list"></i>
-						<span>Lista ordenada</span>
-					</a>
-				</li>
-				<li class="sidebar__nav-item">
-					<a href="artists.html" class="sidebar__nav-link">
-						<i class="far fa-user-friends"></i>
-						<span>Artistas</span>
-					</a>
-				</li>
-				<li class="sidebar__nav-item">
-					<a href="releases.html" class="sidebar__nav-link">
-						<i class="far fa-album-collection"></i>
-						<span>&Aacute;lbuns</span>
-					</a>
-				</li>
-			</ul>
-			<!-- end sidebar nav -->
-		</div>
-		<main class="main">
-			<div class="container-fluid">
-				<section id="lista_ordenada" class="hide">
-					<div class="row row--grid">
-						<!-- title -->
-						<div class="col-12">
-							<div class="main__title main__title--page">
-								<h2>Lista ordenada</h2>
-							</div>
-						</div>
-						<!-- end title -->
-						<div class="col-12">
-							<table class="table" id="tabela_lista_ordenada">
-								<thead>
-									<tr>
-										<th scope="col">#</th>
-										<th scope="col">Artista</th>
-										<th scope="col">T&iacute;tulo</th>
-										<th scope="col">Data</th>
-										<th scope="col">Formato</th>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</section>
-				<section id="album" class="hide">
-					<div class="row row--grid">
-						<!-- title -->
-						<div class="col-12">
-							<div class="main__title main__title--page">
-							</div>
-						</div>
-						<!-- end title -->
-						<div class="col-12">
-							<div class="release">
-								<div class="release__content">
-								</div>
-								<div class="release__list" data-scrollbar="true" tabindex="-1" style="overflow: hidden; outline: currentcolor none medium;">
-									<ul id="track_list" class="main__list main__list--playlist main__list--dashbox">
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</section>
-				<!-- releases -->
-				<section id="releases" class="row row--grid">
-					<!-- title -->
-					<div class="col-12">
-						<div class="main__title">
-							<h2>&Aacute;lbuns</h2>
-							<a href="releases.html" class="main__link">Ver todos
-								<i class="far fa-arrow-right"></i>
-							</a>
-						</div>
-					</div>
-					<!-- end title -->
-					<div class="row row--grid" id="releases_lista">
-					</div>
-				</section>
-				<!-- end releases -->
-				<section id="top_lista" class="row row--grid">
-					<div class="col-12 col-md-6 col-xl-4">
-						<div class="row row--grid">
-							<!-- title -->
-							<div class="col-12">
-								<div class="main__title">
-									<h2>
-									<i class="far fa-microphone"></i> Artistas
-									</h2>
-								</div>
-							</div>
-							<!-- end title -->
-							<div class="col-12">
-								<ul class="main__list" id="top_artistas">
-									<!-- Lista de 5 artistas mais presentes na coleção -->
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="col-12 col-md-6 col-xl-4">
-						<div class="row row--grid">
-							<!-- title -->
-							<div class="col-12">
-								<div class="main__title">
-									<h2>
-									<i class="far fa-music"></i> G&ecirc;neros
-									</h2>
-								</div>
-							</div>
-							<!-- end title -->
-							<div class="col-12">
-								<ul class="main__list" id="top_generos">
-									<!-- Lista de 5 gêneros mais colecionados -->
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="col-12 col-md-6 col-xl-4">
-						<div class="row row--grid">
-							<!-- title -->
-							<div class="col-12">
-								<div class="main__title">
-									<h2>
-									<i class="far fa-album"></i> Formatos
-									</h2>
-								</div>
-							</div>
-							<!-- end title -->
-							<div class="col-12">
-								<ul class="main__list" id="top_formatos">
-									<!-- Lista dos 5 formatos de mídia mais presentes na coleção -->
-								</ul>
-							</div>
-						</div>
-					</div>
-				</section>
-			</div>
-		</main>
-		<script defer src="js/fontawesome.min.js"></script>
-		<script src="js/jquery.slim.min.js"></script>
-		<script src="js/bootstrap.bundle.min.js"></script>
-		<script src="js/smooth-scrollbar.js"></script>
-		<script src="js/alasql.min.js"></script>
-		<script src="js/fuse.min.js"></script>
-		<script src="js/all.min.js"></script>
-	</body>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#criterioOrdenacao">criterioOrdenacao</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#formatMatch">formatMatch</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#geraHtmlListaAlbums">geraHtmlListaAlbums</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#limpaStr">limpaStr</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#renderListaAlbuns">renderListaAlbuns</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#verificaArtistasEspeciais">verificaArtistasEspeciais</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#verificaFormato">verificaFormato</a></span></li>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>pxlcmrd.github.io</h1></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Aug 09 2021 16:49:34 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
 </html>
