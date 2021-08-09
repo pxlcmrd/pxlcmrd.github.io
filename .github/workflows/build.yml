@@ -1,20 +1,21 @@
 name: Build
-  on:
-    push:
-      branches: [ master ]
-    pull_request:
-      branches: [ master ]
-  jobs:
-    build:
-      runs-on: ubuntu-latest
-      steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-      - name: Build arquivos
-        run: make
-      - name: Commit builds
-        run: |
-          git config --global user.name 'pxlcmrd'
-          git config --global user.email 'raphael.toledo@outlook.com'
-          git commit -am "Build"
-          git push
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Build arquivos
+      run: make
+    - name: Commit builds
+      run: |
+        git config --global user.name 'pxlcmrd'
+        git config --global user.email 'raphael.toledo@outlook.com'
+        git commit -am "Build"
+        git push
