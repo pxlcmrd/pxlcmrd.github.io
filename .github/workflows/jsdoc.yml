@@ -1,26 +1,22 @@
 name: JSDoc
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     paths:
       - 'js/externs.js'
       - 'js/main.js'
       - '!.github/workflows/**'
       - '.github/workflows/jsdoc.yml'
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Sleep for 5 minutes
+        uses: whatnick/wait-action@master
+        with:
+          time: '300s'
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Build
         uses: andstor/jsdoc-action@v1
         with:
@@ -29,7 +25,6 @@ jobs:
           #config_file: conf.json
           template: minami
           front_page: README.md
-
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
