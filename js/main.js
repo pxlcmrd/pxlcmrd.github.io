@@ -508,7 +508,7 @@ var main = (function Main() {
                 $('.header__btn').toggleClass('header__btn--active');
                 $('.sidebar').toggleClass('sidebar--active');
                 $('.sidebar__nav .sidebar__nav-link--active').removeClass('sidebar__nav-link--active');
-                $(this).addClass('sidebar__nav-link--active');
+                $($el).addClass('sidebar__nav-link--active');
                 $('section').hide();
             }
             evt.preventDefault();
