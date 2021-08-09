@@ -15,18 +15,18 @@ jobs:
       run: make
     - name: Commit builds
       uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
-        with:
-          # The arguments for the `git add` command (see the paragraph below for more info)
-          # Default: '.'
-          add: ['index.html', 'js/all.min.js']
+      with:
+        # The arguments for the `git add` command (see the paragraph below for more info)
+        # Default: '.'
+        add: '["index.html", "js/all.min.js"]'
 
-          # The name of the user that will be displayed as the author of the commit
-          # Default: depends on the default_author input
-          author_name: pxlcmrd
+        # The name of the user that will be displayed as the author of the commit
+        # Default: depends on the default_author input
+        author_name: pxlcmrd
 
-          # The email of the user that will be displayed as the author of the commit
-          # Default: depends on the default_author input
-          author_email: raphael.toledo@outlook.com
+        # The email of the user that will be displayed as the author of the commit
+        # Default: depends on the default_author input
+        author_email: raphael.toledo@outlook.com
 
-          message: 'Build'
+        message: 'Build'
 
