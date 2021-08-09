@@ -4,9 +4,11 @@ name: JSDoc
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    paths:
+      - 'js/externs.js'
+      - 'js/main.js'
+      - '!.github/workflows/**'
+      - '.github/workflows/jsdoc.yml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
