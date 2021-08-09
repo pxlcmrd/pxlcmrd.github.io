@@ -23,7 +23,7 @@ jobs:
         uses: andstor/jsdoc-action@v1
         with:
           source_dir: ./js/main.js
-          output_dir: ./out
+          output_dir: ./docs
           #config_file: conf.json
           template: minami
           front_page: README.md
@@ -33,4 +33,4 @@ jobs:
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY   }}
           publish_branch: master
-          publish_dir: ./out
+          publish_dir: ./docs
