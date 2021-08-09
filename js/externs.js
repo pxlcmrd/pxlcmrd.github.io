@@ -40,6 +40,7 @@ var Tracks;
  * @typedef {{
  *            id: number,
  *            title: string,
+ *            num: string,
  *            artists_sort: string,
  *            artists: Array<Artists>,
  *            lancamento: string,

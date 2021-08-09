@@ -200,7 +200,7 @@ var main = (function Main() {
 
     function getNomeFormato(format) {
         if (format.name == 'Vinyl') {
-            return 'Vinil' + ' ' + (format.descriptions.indexOf("LP") >= 0 ? '12"' : format.descriptions[0]).replace('"', '&quot;');
+            return 'Vinil' + ' ' + (format.descriptions.indexOf("LP") >= 0 ? '12"' : format.descriptions[0]).replace(/"/g, '&quot;');
         } else if (format.name == 'Cassette') {
             return 'K7';
         } else if (format.name == 'Shellac') {
@@ -299,15 +299,22 @@ var main = (function Main() {
     }
 
     /**
-     * [geraHtmlListaAlbums description]
-     * @param  {Array<Releases>} listaAlbums
+     * @description Gera a listagem de lançamentos na tela principal
+     * @name geraHtmlListaAlbums
+     * @function
+     * @param  {Array<Releases>} listaAlbums - Lista de lançamentos. Aceita
+     * tanto o próprio objeto global de listagem como resultado do Alasql e Fuse
      * @return {string}
      */
     function geraHtmlListaAlbums(listaAlbums) {
         /**
-         * [formatMatch description]
-         * @param  {Match} match
-         * @return {string}
+         * @description Formata uma string de um resultado de pesquisa
+         * atribuindo trechos em negrito aos pedaços que encaixaram com o termo
+         * usado
+         * @name formatMatch
+         * @function
+         * @param  {Match} match - Objeto com os dados do resultado da pesquisa do Fuse
+         * @return {string} Resto
          */
         function formatMatch(match) {
             function grifa(str, s_idx, f_idx) {
