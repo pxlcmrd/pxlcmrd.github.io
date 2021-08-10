@@ -1,0 +1,29 @@
+name: Get Lista
+on:
+  push:
+    paths:
+      - '**.csv'
+      - '!.github/workflows/**'
+      - '.github/workflows/getlista.yml'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: execute py script
+      run: |
+        python getdata.py
+    - name: Commit builds
+      uses: EndBug/add-and-commit@v7
+      with:
+        add: '["js/list.min.js", "js/list.js"]'
+        author_name: pxlcmrd
+        author_email: raphael.toledo@outlook.com
+        message: 'Lista atualizada'
+

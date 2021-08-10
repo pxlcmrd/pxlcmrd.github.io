@@ -36,7 +36,7 @@ def get_lista_atual():
 def parse_args():
     """ Trata os argumentos passados na linha de comando """
     parser = ArgumentParser()
-    parser.add_argument('file', metavar='Arquivo CSV', help='arquivo csv da coleção')
+    parser.add_argument('-c', required=False, help='arquivo csv da coleção', dest='file')
     parser.add_argument('-f', '--force', nargs='+', required=False, dest='force',
         help='--force [Ids de releases para forçarem a ser baixados e sobrescritos]')
     parser.add_argument('-t', '--token', required=False, dest='token',
@@ -236,5 +236,10 @@ if not os.path.isdir('img'):
 
 if not os.path.isdir('js'):
     os.mkdir('js')
+
+for arquivo in os.listdir("."):
+    if arquivo.endswith(".csv"):
+        args.file = arquivo
+        break
 
 main()
