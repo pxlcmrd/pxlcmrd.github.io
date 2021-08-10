@@ -20,6 +20,10 @@ var main = (function Main() {
         }]
     });
 
+    /**
+     * @function ordena
+     * @description Faz a ordenação da lista de acordo com os critérios adotados para a coleção
+     */
     var ordena = function() {
         var lista = JSON.parse(JSON.stringify(list));
         //Lista de releases especiais que precisam ser tratados diferenciadamente
@@ -27,13 +31,14 @@ var main = (function Main() {
         var arrNovelas = [221276, 517593, 1348132, 4325218, 1361899, 1378901, 1788971, 2211613, 2413935, 2520470, 2520504, 2533013, 2590676, 2633561, 2658406, 2812048, 5211379, 10771082];
 
         /**
-         * @description Limpa a string de caracteres especiais ou termos indesejáveis para a função de ordenação
-         * @name limpaStr
-         * @param  {string} s String chave usada na ordenação
-         * @return {string}   Retorna a string pronta para ser usada na ordenação
+         * @function limpaStr
+         * @description Limpa a string de caracteres especiais ou termos
+         * indesejáveis para a função de ordenação
+         * @param  {string} texto - String chave usada na ordenação
+         * @return {string} Retorna a string pronta para ser usada na ordenação
          */
-        function limpaStr(s) {
-            return s.replace(/[áÁãÃâÂàÀ]/g, 'a').
+        function limpaStr(texto) {
+            return texto.replace(/[áÁãÃâÂàÀ]/g, 'a').
             replace(/[éÉẽẼêÊèÈ]/g, 'e').
             replace(/[íÍĩĨêÎìÌ]/g, 'i').
             replace(/[óÓõÕôÔ]/g, 'o').
@@ -44,57 +49,60 @@ var main = (function Main() {
         }
 
         /**
-         * @description Confere casos excepcionais em que o nome do artista deve ser substituído (traduções ou critério 4.1)
-         * @name verificaArtistasEspeciais
-         * @param  {Releases} r Objeto do release
-         * @return {string}    Retorna o nome do artista como deve ser considerado na coleção
+         * @function verificaArtistasEspeciais
+         * @description Confere casos excepcionais em que o nome do artista deve
+         * ser substituído (traduções ou critério 4.1)
+         * @param  {Releases} release - Objeto do release
+         * @return {string} Retorna o nome do artista como deve ser considerado
+         * na coleção
          */
-        function verificaArtistasEspeciais(r) {
+        function verificaArtistasEspeciais(release) {
             //Verifica casos de tradução de nome
-            if (r.id == 14996403 || r.id == 14970948) {
+            if (release.id == 14996403 || release.id == 14970948) {
                 return 'Molchat Doma';
             }
 
             //Verifica títulos mais consagrados do que o crédito no artista
             //       Doces Bárbaros         //Psicopretas
-            if (r.id == 9299219 || r.id == 13770359) {
-                return r.title;
+            if (release.id == 9299219 || release.id == 13770359) {
+                return release.title;
             }
 
             //Verifica nomes que exigem substituição (Detalhes de créditos)
-            if (r.id == 3696794 || r.id == 4699464) {
+            if (release.id == 3696794 || release.id == 4699464) {
                 return 'Raul Seixas';
-            } else if (r.id == 3677642 || r.id == 1373314) {
+            } else if (release.id == 3677642 || release.id == 1373314) {
                 return 'Santa Esmeralda';
-            } else if (r.id == 15421432) {
+            } else if (release.id == 15421432) {
                 return 'Tito Madi';
-            } else if (r.artists_sort == 'Raimundo Fagner') {
+            } else if (release.artists_sort == 'Raimundo Fagner') {
                 return 'Fagner';
             }
 
             //Verifica nomes com algarismos
-            if (/^\b\d+\b/.test(r.artists_sort)) {
-                var num = r.artists_sort.replace(/^(\b\d+\b).*/, '$1');
+            if (/^\b\d+\b/.test(release.artists_sort)) {
+                var num = release.artists_sort.replace(/^(\b\d+\b).*/, '$1');
                 num = ('000000000' + num).slice(-9);
-                return r.artists_sort.replace(/^\b\d+\b(.*)/, num + '$1');
+                return release.artists_sort.replace(/^\b\d+\b(.*)/, num + '$1');
             }
 
             //Verifica Vários e desconhecidos ou trilha sonoras
-            if (r.artists_sort == 'Various' || r.artists_sort == 'Unknown Artist' || arrTrilhas.indexOf(Number(r['id'])) > 0 || arrNovelas.indexOf(Number(r['id'])) > 0) {
-                return r.title;
+            if (release.artists_sort == 'Various' || release.artists_sort == 'Unknown Artist' || arrTrilhas.indexOf(Number(release.id)) > 0 || arrNovelas.indexOf(Number(release.id)) > 0) {
+                return release.title;
             }
 
-            return r.artists_sort;
+            return release.artists_sort;
         }
 
         /**
          * @description Separa os compactos para o final da lista
-         * @name verificaFormato
-         * @param  {Releases} r Objeto do release
-         * @return {string}    Se for compacto retorna um string '~' para garantir que a chave de ordenação seja movida para o final da lista
+         * @function verificaFormato
+         * @param  {Releases} release Objeto do release
+         * @return {string} Retorna um caractere que tem uma certa prioridade na
+         * ordenação para garantir que o álbum vá para a posição desejada
          */
-        function verificaFormato(r) {
-            var formatos = r.formats.reduce(function(a, v) {
+        function verificaFormato(release) {
+            var formatos = release.formats.reduce(function(a, v) {
                 a.push(v.name);
                 if (v.descriptions && v.descriptions.length) {
                     v.descriptions.reduce(function(f, d) {
@@ -112,20 +120,35 @@ var main = (function Main() {
             }
         }
 
-        function verificaTrilhaSonora(r) {
-            if (arrTrilhas.indexOf(Number(r.id)) >= 0) {
+        /**
+         * @description Separa as trilhas sonoras para o critério 2.4
+         * @function verificaTrilhaSonora
+         * @param  {Releases} release Objeto do release
+         * @return {string} Retorna um caractere que tem uma certa prioridade na
+         * ordenação para garantir que o álbum vá para a posição desejada
+         */
+        function verificaTrilhaSonora(release) {
+            if (arrTrilhas.indexOf(Number(release.id)) >= 0) {
                 return '~}';
-            } else if (arrNovelas.indexOf(Number(r.id)) >= 0) {
-                return '~~' + limpaStr(r.title);
+            } else if (arrNovelas.indexOf(Number(release.id)) >= 0) {
+                return '~~' + limpaStr(release.title);
             }
 
             return '}';
         }
 
-        function verificaVariosDesconhecidos(r) {
+        /**
+         * @description Verifica os lançamentos de Vários artistas ou
+         * desconhecidos de acordo com o critério 2.2
+         * @function verificaVariosDesconhecidos
+         * @param  {Releases} release Objeto do release
+         * @return {string} Retorna um caractere que tem uma certa prioridade na
+         * ordenação para garantir que o álbum vá para a posição desejada
+         */
+        function verificaVariosDesconhecidos(release) {
             //Exceções como álbuns de tributos
             var arrExcecoes = [15421432, 13770359];
-            if ((r.artists_sort == 'Various' || r.artists_sort == 'Unknown Artist') && arrExcecoes.indexOf(Number(r.id)) < 0 && arrTrilhas.indexOf(Number(r.id)) < 0 && arrNovelas.indexOf(Number(r.id) < 0)) {
+            if ((release.artists_sort == 'Various' || release.artists_sort == 'Unknown Artist') && arrExcecoes.indexOf(Number(release.id)) < 0 && arrTrilhas.indexOf(Number(release.id)) < 0 && arrNovelas.indexOf(Number(release.id) < 0)) {
                 return '~';
             } else {
                 return '}';
@@ -135,30 +158,47 @@ var main = (function Main() {
         /**
          * @description Compara 2 lançamentos 'a' e 'b' e indica qual deve vir antes na lista.
          * Os critérios devem ser:
-         * v   1. Duas categorias principais, I e II, sendo descritas e ordenadas conforme a seguir:
-         * v       1.1. Categoria I: LPs, 12" e 10";
-         * v       1.2. Categoria II: 7",
-         *    2. Categoria I deve ser dividida e ordenada conforme a seguir:
-         * v      2.1. Principais: Lançamentos comuns de um artista ou conjunto que não se enquadram nas categorias abaixo;
-         *        2.2. Vários artistas: Lançamentos comuns que contém vários artistas ou conjuntos ou artistas desconhecidos que não seja álbum de tributo e que não se enquadram nas categorias abaixo;
-         *        2.3. Compilações: Lançamentos com apanhado de trilhas não inéditas (que pertencem a produtos lançados previamente). Não inclui compilações de conteúdos inéditos nem lançamentos que se enquadram nas categorias abaixo;
-         * v      2.4. Trilhas sonoras: Lançamentos que compreendem a trilha sonora de uma produção. Deve ser subcategorizado e ordenado como a seguir:
-         * v          2.4.1. Produções: Trilhas de filmes, jogos, séries, programas televisivos, etc;
-         * v          2.4.2. Novelas: Trilhas de novelas.
-         *    3. Todas categorias e subcategorias, exceto quando particularmente especificados, devem obedecer os seguintes critérios:
-         * v      3.1. Não deve diferenciar letras maiúsculas de minúsculas;
-         * v      3.2. Não deve diferenciar acentos gráficos e caracteres especiais;
-         * v      3.3. Não deve considerar artigos;
-         * v      3.4. Números devem ser considerados sua ordem de grandeza, não alfabética;
-         * v      3.5. Ordem alfabética de artistas;
-         * v      3.6. Ordem de data de lançamento original do álbum;
-         *    4. Casos particulares são os seguintes:
-         *        4.1. Casos 2.2 em que o lançamento é tão importante, ou seja, quando seu título assume sua própria identidade, devem considerar o título no lugar do artista e serem alocados na categoria 2.1;
-         *        4.2. Casos 2.4 devem ser ordenados pelo título do album, de acordo com os critérios 3.1 até 3.4
-         *
+         * <ol>
+         *   <li>Duas categorias principais, I e II, sendo descritas e ordenadas conforme a seguir:
+         *     <ol>
+         *       <li>Categoria I: LPs, 12" e 10";</li>
+         *       <li>Categoria II: 7",</li>
+         *     </ol>
+         *   </li>
+         *   <li>Categoria I deve ser dividida e ordenada conforme a seguir:
+         *     <ol>
+         *       <li>Principais: Lançamentos comuns de um artista ou conjunto que não se enquadram nas categorias abaixo;</li>
+         *       <li>Vários artistas: Lançamentos comuns que contém vários artistas ou conjuntos ou artistas desconhecidos que não seja álbum de tributo e que não se enquadram nas categorias abaixo;</li>
+         *       <li>Compilações: Lançamentos com apanhado de trilhas não inéditas (que pertencem a produtos lançados previamente). Não inclui compilações de conteúdos inéditos nem lançamentos que se enquadram nas categorias abaixo;</li>
+         *       <li>Trilhas sonoras: Lançamentos que compreendem a trilha sonora de uma produção. Deve ser subcategorizado e ordenado como a seguir:
+         *         <ol>
+         *           <li>Produções: Trilhas de filmes, jogos, séries, programas televisivos, etc;</li>
+         *           <li>Novelas: Trilhas de novelas.</li>
+         *         </ol>
+         *       </li>
+         *     </ol>
+         *   <li>Todas categorias e subcategorias, exceto quando particularmente especificados, devem obedecer os seguintes critérios:
+         *     <ol>
+         *       <li>Não deve diferenciar letras maiúsculas de minúsculas;</li>
+         *       <li>Não deve diferenciar acentos gráficos e caracteres especiais;</li>
+         *       <li>Não deve considerar artigos;</li>
+         *       <li>Números devem ser considerados sua ordem de grandeza, não alfabética;</li>
+         *       <li>Ordem alfabética de artistas;</li>
+         *       <li>Ordem de data de lançamento original do álbum;</li>
+         *     </ol>
+         *   </li>
+         *   <li>Casos particulares são os seguintes:
+         *     <ol>
+         *       <li>Casos 2.2 em que o lançamento é tão importante, ou seja, quando seu título assume sua própria identidade, devem considerar o título no lugar do artista e serem alocados na categoria 2.1;</li>
+         *       <li>Casos 2.4 devem ser ordenados pelo título do album, de acordo com os critérios 3.1 até 3.4</li>
+         *     </ol>
+         *   </li>
+         * </ol>
+         * @summary Compara 2 lançamentos de acordo com os critérios estabelecidos
          * @name criterioOrdenacao
-         * @param  {Releases} a
-         * @param  {Releases} b
+         * @function
+         * @param  {Releases} a - Álbum 1
+         * @param  {Releases} b - Álbum 2
          * @return {number}  Retorna -1 se 'a' deve vir antes de 'b', 1 se deve vir depois ou 0 se a posição não deve ser mudada
          */
         function criterioOrdenacao(a, b) {
@@ -172,7 +212,7 @@ var main = (function Main() {
             auxa = limpaStr(auxa);
             auxb = limpaStr(auxb);
 
-            //Verifica os lançamentos de vários artitas ou desconhecidos
+            //Verifica os lançamentos de vários artistas ou desconhecidos
             auxa = verificaVariosDesconhecidos(a) + auxa;
             auxb = verificaVariosDesconhecidos(b) + auxb;
 
@@ -198,6 +238,12 @@ var main = (function Main() {
         return lista;
     };
 
+    /**
+     * @description Retorna o nome do formato principal do álbum devidamente processado e em português
+     * @function getNomeFormato
+     * @param  {Formats} format Formato do lançamento
+     * @return {string} Nome do formato processado e em português
+     */
     function getNomeFormato(format) {
         if (format.name == 'Vinyl') {
             return 'Vinil' + ' ' + (format.descriptions.indexOf("LP") >= 0 ? '12"' : format.descriptions[0]).replace(/"/g, '&quot;');
@@ -214,10 +260,11 @@ var main = (function Main() {
     }
 
     /**
-     * [geraHtmlTracks description]
-     * @param  {Array<Tracks>} tracklist [description]
-     * @param  {string=} type      [description]
-     * @return {string}           [description]
+     * @description Produz o html da lista de faixas de um álbum
+     * @function geraHtmlTracks
+     * @param  {Array<Tracks>} tracklist - Lista de faixas
+     * @param  {string} [type] - Explicita o tipo como a faixa deve ser processada
+     * @return {string} HTML da listagem de faixas
      */
     function geraHtmlTracks(tracklist, type) {
         var i, len, artista, html = '';
@@ -250,10 +297,23 @@ var main = (function Main() {
         return html;
     }
 
+    /**
+     * @description Gera HTML com a formatação do título do álbum
+     * @function geraHtmlTituloAlbum
+     * @param  {Releases} objAlbum Objeto do release
+     * @return {string} Retorna o HTML
+     */
     function geraHtmlTituloAlbum(objAlbum) {
         return '<h1>' + objAlbum.artists_sort + ' &ndash; ' + objAlbum.title + '</h1>';
     }
 
+    /**
+     * @description Gera HTML da visualização dos dados e listagem de faixas de
+     * um álbum
+     * @function geraHtmlAlbum
+     * @param  {Releases} objAlbum Objeto do release
+     * @return {string} Retorna o HTML
+     */
     function geraHtmlAlbum(objAlbum) {
         var num_tracks = objAlbum.tracklist.reduce(function(a, v) {
             if (v.type_ == 'track') {
@@ -299,59 +359,27 @@ var main = (function Main() {
     }
 
     /**
-     * @description Gera a listagem de lançamentos na tela principal
+     * @description Gera o HTML da listagem de lançamentos na tela principal
      * @name geraHtmlListaAlbums
      * @function
-     * @param  {Array<Releases>} listaAlbums - Lista de lançamentos. Aceita
-     * tanto o próprio objeto global de listagem como resultado do Alasql e Fuse
-     * @return {string}
+     * @param  {Array<Releases>} listaAlbums - Lista de lançamentos
+     * @return {string} Retorna o HTML
      */
     function geraHtmlListaAlbums(listaAlbums) {
-        /**
-         * @description Formata uma string de um resultado de pesquisa
-         * atribuindo trechos em negrito aos pedaços que encaixaram com o termo
-         * usado
-         * @name formatMatch
-         * @function
-         * @param  {Match} match - Objeto com os dados do resultado da pesquisa do Fuse
-         * @return {string} Resto
-         */
-        function formatMatch(match) {
-            function grifa(str, s_idx, f_idx) {
-                return str.slice(0, s_idx) + '<b>' + str.slice(s_idx, f_idx) + '</b>' + str.slice(f_idx);
-            }
-
-            var txt = match.value;
-            for (var i = match.indices.length - 1; i >= 0; i--) {
-                txt = grifa(txt, match.indices[i][0], match.indices[i][1] + 1);
-            }
-
-            return txt;
-        }
-
-        var album, html = "";
-        var is_busca = false;
+        var html = "";
 
         for (var i = 0, len = Math.min(listaAlbums.length, 24); i < len; i++) {
-            //Caso a lista seja do Fuse ou Alasql
-            if (listaAlbums[i].item) {
-                is_busca = true;
-                album = listaAlbums[i].item;
-            } else {
-                album = listaAlbums[i];
-            }
-
             html +=
                 '<div class="col-6 col-sm-4 col-lg-2">' +
                 '  <div class="album">' +
                 '    <div class="album__cover">' +
-                '      <img src="img/' + album.id + '.jpg" onerror="this.src=\'img/no-image.png\'">' +
-                '      <a class="show_album" href="' + album.id + '">' +
+                '      <img src="img/' + listaAlbums[i].id + '.jpg" onerror="this.src=\'img/no-image.png\'">' +
+                '      <a class="show_album" href="' + listaAlbums[i].id + '">' +
                 '        <i class="fas fa-2x fa-search-plus"></i>' +
                 '      </a>' +
                 '      <span class="album__stat">' +
                 '        <span>' +
-                '          <i class="fas fa-list"></i> ' + album.tracklist.reduce(function(a, v) {
+                '          <i class="fas fa-list"></i> ' + listaAlbums[i].tracklist.reduce(function(a, v) {
                     if (v.type_ == 'track') {
                         return a + 1;
                     } else if (v.type_ == 'index' && v.sub_tracks) {
@@ -364,16 +392,16 @@ var main = (function Main() {
                 }, 0) +
                 '        </span>' +
                 '        <span>' +
-                '          <i class="far fa-star"></i> ' + album.community.rating.average +
+                '          <i class="far fa-star"></i> ' + listaAlbums[i].community.rating.average +
                 '        </span>' +
                 '      </span>' +
                 '    </div>' +
                 '    <div class="album__title">' +
                 '      <h3>' +
-                '        <a class="show_album" href="' + album.id + '">' + (is_busca && listaAlbums[i].matches[0].key == 'title' ? formatMatch(listaAlbums[i].matches[0]) : album.title) + '</a>' +
+                '        <a class="show_album" href="' + listaAlbums[i].id + '">' + listaAlbums[i].title + '</a>' +
                 '      </h3>' +
                 '      <span>' +
-                '        <a href="artist.html">' + (is_busca && listaAlbums[i].matches[0].key == 'artists_sort' ? formatMatch(listaAlbums[i].matches[0]) : album.artists_sort) + '</a>' +
+                '        <a href="artist.html">' + listaAlbums[i].artists_sort + '</a>' +
                 '      </span>' +
                 '    </div>' +
                 '  </div>' +
@@ -383,8 +411,15 @@ var main = (function Main() {
         return html;
     }
 
+    /**
+     * @description Calcula e gera o HTML da listagem dos 5 artistas com mais álbuns na coleção
+     * @function geraHtmlTop5Artistas
+     * @return {string} Retorna o HTML
+     */
     function geraHtmlTop5Artistas() {
-        return alasql("SELECT *, count(*) AS num FROM ? WHERE artists_sort != 'Various' GROUP BY artists_sort ORDER BY num DESC LIMIT 5", [list]).reduce(function(a, v, i) {
+        /** @type {Array<Releases>} */
+        var listaTopArtistas = alasql("SELECT *, count(*) AS num FROM ? WHERE artists_sort != 'Various' GROUP BY artists_sort ORDER BY num DESC LIMIT 5", [list]);
+        return listaTopArtistas.reduce(function(a, v, i) {
             return a +
                 '<li class="single-item">' +
                 '  <span class="single-item__number">' + (i + 1) +
@@ -409,17 +444,24 @@ var main = (function Main() {
         }, '');
     }
 
+    /**
+     * @description Calcula e gera o HTML da listagem dos 5 gêneros mais presentes na coleção
+     * @function geraHtmlTop5Generos
+     * @return {string} Retorna o HTML
+     */
     function geraHtmlTop5Generos() {
         var generos = {};
-        list.forEach(function(e) {
-            (e.styles || e.genres).forEach(function(g) {
-                if (!generos[g]) {
-                    generos[g] = 1;
-                } else {
-                    generos[g]++;
-                }
+        list.forEach(
+            /** @param {Releases} e */
+            function(e) {
+                (e.styles || e.genres).forEach(function(g) {
+                    if (!generos[g]) {
+                        generos[g] = 1;
+                    } else {
+                        generos[g]++;
+                    }
+                });
             });
-        });
 
         var top5_generos = Object.keys(generos).sort(function(a, b) {
             return generos[a] > generos[b] ? -1 : 1;
@@ -449,6 +491,11 @@ var main = (function Main() {
         return conteudo_generos;
     }
 
+    /**
+     * @description Calcula e gera o HTML da listagem dos 5 formatos mais presentes na coleção
+     * @function geraHtmlTop5Formatos
+     * @return {string} Retorna o HTML
+     */
     function geraHtmlTop5Formatos() {
         var formatos = {};
 
@@ -489,6 +536,10 @@ var main = (function Main() {
         return conteudo_formatos;
     }
 
+    /**
+     * @description Intancia e inicializa os eventos da interface
+     * @function initEventos
+     */
     function initEventos() {
         $('.header__search .close').on('click', function() {
             $('.header__search').removeClass('header__search--active');
@@ -545,6 +596,30 @@ var main = (function Main() {
             search_term = $(this).val().trim();
             timeoutObject = setTimeout(function() {
                 var result = fuse.search(search_term);
+
+                //Constroi a lista de release
+                result = result.map(function(e) {
+                    var titulo = e.matches.reduce(function(a, m) {
+                        if (m.key == 'title') {
+                            return a + formatMatch(m);
+                        } else {
+                            return a;
+                        }
+                    }, '');
+
+                    return {
+                        "id": e.item.id,
+                        "tracklist": e.item.tracklist,
+                        "community": {
+                            "rating": {
+                                "average": e.item.community.rating.average
+                            }
+                        },
+                        "title": titulo || e.item.title,
+                        "artists_sort": e.item.artists_sort
+                    };
+                });
+
                 $this.renderListaAlbuns(result);
             }, 100);
         });
@@ -562,6 +637,33 @@ var main = (function Main() {
         });
     }
 
+    /**
+     * @description Formata uma string de um resultado de pesquisa
+     * atribuindo trechos em negrito aos pedaços que encaixaram com o termo
+     * usado
+     * @name formatMatch
+     * @function
+     * @param  {Match} match - Objeto com os dados do resultado da pesquisa do Fuse
+     * @return {string} Termo estilizado
+     */
+    function formatMatch(match) {
+        function grifa(str, s_idx, f_idx) {
+            return str.slice(0, s_idx) + '<b>' + str.slice(s_idx, f_idx) + '</b>' + str.slice(f_idx);
+        }
+
+        var txt = match.value;
+        for (var i = match.indices.length - 1; i >= 0; i--) {
+            txt = grifa(txt, match.indices[i][0], match.indices[i][1] + 1);
+        }
+
+        return txt;
+    }
+
+    /**
+     * @description Realiza a exibição dos dados de um álbum na interface
+     * @function renderAlbum
+     * @param  {number} id - Id od album no Discogs
+     */
     $this.renderAlbum = function(id) {
         var objAlbum, i, len;
 
@@ -581,7 +683,7 @@ var main = (function Main() {
 
     /**
      * @description Renderiza a listagem de releases na tela principal
-     * @name renderListaAlbuns
+     * @function renderListaAlbuns
      * @param  {Array<Releases>} [listaAlbums]
      */
     $this.renderListaAlbuns = function(listaAlbums) {
@@ -592,25 +694,19 @@ var main = (function Main() {
         $("#releases_lista").html(geraHtmlListaAlbums(listaAlbums));
     };
 
-    $this.renderTop5Artistas = function() {
-        $("#top_artistas").html(geraHtmlTop5Artistas());
-    };
-
-    $this.renderTop5Generos = function() {
-        $("#top_generos").html(geraHtmlTop5Generos());
-    };
-
-    $this.renderTop5Formatos = function() {
-        $("#top_formatos").html(geraHtmlTop5Formatos());
-    };
-
     $this.init = function() {
         initEventos();
         $("#album").hide();
         $this.renderListaAlbuns();
-        setTimeout($this.renderTop5Artistas, 200);
-        setTimeout($this.renderTop5Generos, 210);
-        setTimeout($this.renderTop5Formatos, 220);
+        setTimeout(function() {
+            $("#top_artistas").html(geraHtmlTop5Artistas());
+        }, 200);
+        setTimeout(function() {
+            $("#top_generos").html(geraHtmlTop5Generos());
+        }, 210);
+        setTimeout(function() {
+            $("#top_formatos").html(geraHtmlTop5Formatos());
+        }, 220);
     };
 
     return $this;

@@ -4,26 +4,35 @@
  */
 var globals = {};
 
-/** 
+/**
  * @typedef {{
  *            name: string,
  *            qty: string,
  *            descriptions: Array<string>
  *          }}
+ * @property {string} name - Nome do tipo
+ * @property {string} qty - Quantidade de mídias
+ * @property {Array<string>} descriptions - Descrições complementares
  */
 var Formats;
 
-/** 
+/**
+ * Dados do artista
  * @typedef {{
  *            name: string,
  *            anv: string,
  *            thumbnail_url: string,
  *            id: number
  *          }}
+ * @property {string} name - Nome de acordo com a base do Discogs
+ * @property {string} [anv] - Nome conforme exibido no álbum
+ * @property {string} [thumbnail_url] - Url para a imagem do artista
+ * @property {number} id - Id na base do Discogs
  */
 var Artists;
 
-/** 
+/**
+ * Dados das faixas
  * @typedef {{
  *            type_: string,
  *            title: string,
@@ -33,10 +42,18 @@ var Artists;
  *            extraartists: Array<Artists>,
  *            sub_tracks: Array<Tracks>
  *          }}
+ * @property {string} type_ - Tipo que o registro da faixa representa
+ * @property {string} title - Título
+ * @property {string} [position] - Posição na listagem do álbum
+ * @property {string} [duration] - Tempo de duração
+ * @property {Array<Artists>} artists - Lista de artistas principais
+ * @property {Array<Artists>} extraartists - Lista de crédidos complementares de artistas
+ * @property {Array<Tracks>} sub_tracks - Sub faixas pertencentes
  */
 var Tracks;
 
-/** 
+/**
+ * Dados de um álbum
  * @typedef {{
  *            id: number,
  *            title: string,
@@ -48,8 +65,19 @@ var Tracks;
  *            tracklist: Array<Tracks>,
  *            genres: Array<string>,
  *            styles: Array<string>,
- *            item: Releases
+ *            community: Object
  *          }}
+ * @property {number} id - Id do lançamento no discogs
+ * @property {string} title - Título
+ * @property {string} [num] - Contagem de dados do Alasql
+ * @property {string} artists_sort - Nome do artista principal
+ * @property {Array<Artists>} [artists] - Informações completas dos artistas principais
+ * @property {string} lancamento - Ano de lançamento
+ * @property {Array<Formats>} formats - Informações do formato da mídia
+ * @property {Array<Tracks>} tracklist - Lista de faixas
+ * @property {Array<string>} genres - Lista de gêneros
+ * @property {Array<string>} styles - Lista de estilos
+ * @property {Object} community - Dados sociais da rede do Discogs
  */
 var Releases;
 
@@ -64,22 +92,29 @@ Releases.prototype.community.rating.average;
  */
 globals.list;
 
-
-/** 
+/**
+ * Opções do Fuse
  * @typedef {{
  *            threshold: number,
  *            includeMatches: boolean,
- *            keys: Array<Object>,
+ *            keys: Array<Object>
  *          }}
+ * @property {number} threshold - Limiar de tolerância do casamento da chave com o termo o item
+ * @property {boolean} includeMatches - Flag se deve incluir os dados do resultado da pesquisa
+ * @property {Array<Object>} keys - Propriedades do objeto que devem ser considerados na busca
  */
 var Fuse_options;
 
-/** 
+/**
+ * Dados do resultado da busca
  * @typedef {{
  *            indices: Array<Array<Number>>,
  *            key: string,
  *            value: string
  *          }}
+ * @property {Array<Array<Number>>} indices - Dados do valor que deu sucesso na pesquisa
+ * @property {string} key - Chave da pesquisa
+ * @property {string} value - Item encontrado
  */
 var Match;
 
@@ -92,7 +127,6 @@ function Fuse(lista, options) {
     /** @type {Function} */
     this.search;
 };
-
 
 var alasql;
 
