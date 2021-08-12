@@ -1,2 +1,0 @@
-var errooooo = (function Main() {
-
