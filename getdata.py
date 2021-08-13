@@ -188,7 +188,7 @@ def main():
             else:
                 #Tenta ver se o release lido do csv já existe no list.js
                 try:
-                    if args.force is not None and args.force.count(row[column]) == 1:
+                    if args.force is not None and args.force.count(row[column]) >= 1:
                         raise ValueError
                     #Se existir ele é reaproveitado
                     releases.append(json.dumps(
