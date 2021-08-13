@@ -6198,3 +6198,8 @@ body::-webkit-scrollbar-thumb {
 #tabela_lista_ordenada th, #tabela_lista_ordenada td {
   color: #FFF;
 }
+
+@media (max-width: 1200px) {
+#tabela_lista_ordenada th, #tabela_lista_ordenada td {
+  font-size: 2rem;
+}
