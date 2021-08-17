@@ -58,6 +58,7 @@ var Tracks;
  *            id: number,
  *            title: string,
  *            num: string,
+ *            country: string,
  *            artists_sort: string,
  *            artists: Array<Artists>,
  *            lancamento: string,
@@ -70,6 +71,7 @@ var Tracks;
  * @property {number} id - Id do lançamento no discogs
  * @property {string} title - Título
  * @property {string} [num] - Contagem de dados do Alasql
+ * @property {string} country - Nome do país
  * @property {string} artists_sort - Nome do artista principal
  * @property {Array<Artists>} [artists] - Informações completas dos artistas principais
  * @property {string} lancamento - Ano de lançamento
