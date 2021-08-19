@@ -6135,7 +6135,7 @@ body::-webkit-scrollbar-thumb {
 }
 @media (min-width: 768px) {
   #track_list .single-item__title {
-    max-width: 250px;
+    max-width: 340px;
   }
 }
 @media (min-width: 1000px) {
@@ -6200,6 +6200,64 @@ body::-webkit-scrollbar-thumb {
 }
 
 @media (max-width: 1200px) {
-#tabela_lista_ordenada th, #tabela_lista_ordenada td {
-  font-size: 2rem;
+  .sidebar {
+    width: 320px;
+  }
+  body, .sidebar__nav-link, .album__title a, .single-item a, .single-item__title h4, .header__search input, .single-item__time {
+    font-size: 2rem;
+  }
+  .single-item span, .single-item h4 {
+    line-height: 44px;
+  }
+  .header__search {
+    height: 110px;
+    top: -111px;
+  }
+  .header__search--active {
+    top: 0px;
+  }
+  .header__search input {
+    height: 100px;
+  }
+  .header__search button {
+    top: 32px;
+  }
+  .header, .header__content {
+    height: 130px;
+  }
+  .header__action {
+    width: 50px;
+  }
+  .header__actions {
+    margin-right: 72px;
+  }
+  .header__btn {
+    top: 40px;
+  }
+  .header__btn span:first-child {
+    height: 4px;
+    top: 0;
+    width: 48px;
+  }
+  .header__btn span:nth-child(2) {
+    height: 4px;
+    top: 20px;
+    width: 32px;
+  }
+  .header__btn span:last-child {
+    height: 4px;
+    top: 40px;
+    width: 16px;
+  }
+  .header__btn--active span:first-child {
+    width: 64px;
+    top: 20px;
+  }
+  .header__btn--active span:last-child {
+    width: 64px;
+    top: 20px;
+  }
+  .track-item__cover {
+    width: 64px;
+  }
 }

@@ -674,7 +674,7 @@ var main = (function Main() {
             }
         }
 
-        $(".main__title--page").html(geraHtmlTituloAlbum(objAlbum));
+        $("#album .main__title--page").html(geraHtmlTituloAlbum(objAlbum));
         $(".release__content").html(geraHtmlAlbum(objAlbum));
         $("#track_list").html(geraHtmlTracks(objAlbum.tracklist));
 
