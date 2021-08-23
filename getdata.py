@@ -152,6 +152,27 @@ def minimize_file(str_json, lancamento = ""):
         "tracklist": minimize_track(obj['tracklist'])
     }, ensure_ascii=False, separators=(',', ':'))
 
+def get_collection(list_discogs):
+    """ Obtém a lista de releases atuais na coleção """
+    i = 1
+    while True:
+        with urllib.request.urlopen("https://api.discogs.com/users/raphaelzera/collection/" +
+            "folders/0/releases?per_page=100&page=" + str(i) + '&token=' + args.token) as response:
+            dados = json.loads(response.read())
+            print('Page: ' + str(i) + '/' + str(dados['pagination']['pages']))
+
+            for release in dados['releases']:
+                list_discogs.append({
+                    "id": release['id'],
+                    "lancamento": release['notes'][2]['value']
+                })
+
+            i = i + 1
+
+            if i > dados['pagination']['pages']:
+                break
+    return list_discogs
+
 def get_id(obj):
     """ Retorna o id do release para ser usado no mapeamento index<->id """
     return obj['id']
@@ -162,70 +183,62 @@ def main():
     #mapeia apenas o id dos releases
     index_lista_atual = list(map(get_id, lista_atual))
     #carrega o arquivo csv
-    with open(args.file, encoding="utf8") as csv_file:
-        #inicializa os contadores
-        column = 0
-        contadores = {
-            "line": 0,
-            "new": 0,
-            "old": 0
-            #line_count = 0
-            #new_count = 0
-            #old_count = 0
-        }
-        #Lê o conteúdo do csv
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        list_discogs = list(csv_reader)
+
+    #inicializa os contadores
+    column = 0
+    contadores = {
+        "line": 0,
+        "new": 0,
+        "old": 0
+        #line_count = 0
+        #new_count = 0
+        #old_count = 0
+    }
+
+    list_discogs = []
+    get_collection(list_discogs)
+    print_progress_bar(contadores['line'], len(list_discogs), length=50)
+    for row in list_discogs:
+        #Tenta ver se o release lido do csv já existe no list.js
+        try:
+            if args.force is not None and args.force.count(str(row['id'])) >= 1:
+                raise ValueError
+            #Se existir ele é reaproveitado
+            releases.append(json.dumps(
+                lista_atual[index_lista_atual.index(row['id'])],
+                ensure_ascii=False, separators=(',', ':')))
+            contadores['old'] += 1
+        except ValueError:
+            #Se não existir então carrega do discogs
+            entrada = time.time()
+            releases.append(get_release(row['id']))
+            contadores['new'] += 1
+            #O processo tem que dormir para não estourar o limite de acessos do discogs
+            saida = time.time()
+            if LIMIT > saida - entrada:
+                time.sleep(LIMIT - saida + entrada)
+
+        releases_min.append(minimize_file(releases[len(releases) - 1], row['lancamento']))
+
+        if json.loads(releases[len(releases) - 1])['thumb'] != "" and not os.path.exists(
+            'img/' + str(row['id']) + '.jpg'):
+            req_img = Request(json.loads(releases[len(releases) - 1])['thumb'],
+                headers={'User-Agent': 'Mozilla/5.0'})
+
+            with open('img/' + str(row['id']) + '.jpg', "wb") as file:
+                with urlopen(req_img) as imagem_capa:
+                    file.write(imagem_capa.read())
+                file.close()
+
+        contadores['line'] += 1
         print_progress_bar(contadores['line'], len(list_discogs), length=50)
-        for row in list_discogs:
-            #A primeira linha do csv é apenas os títulos das colunas
-            if contadores['line'] == 0:
-                contadores['line'] = 1
-                for col in row:
-                    if col == 'release_id':
-                        break
-                    column += 1
-            else:
-                #Tenta ver se o release lido do csv já existe no list.js
-                try:
-                    if args.force is not None and args.force.count(row[column]) >= 1:
-                        raise ValueError
-                    #Se existir ele é reaproveitado
-                    releases.append(json.dumps(
-                        lista_atual[index_lista_atual.index(int(row[column]))],
-                        ensure_ascii=False, separators=(',', ':')))
-                    contadores['old'] += 1
-                except ValueError:
-                    #Se não existir então carrega do discogs
-                    entrada = time.time()
-                    releases.append(get_release(row[column]))
-                    contadores['new'] += 1
-                    #O processo tem que dormir para não estourar o limite de acessos do discogs
-                    saida = time.time()
-                    if LIMIT > saida - entrada:
-                        time.sleep(LIMIT - saida + entrada)
 
-                releases_min.append(minimize_file(releases[len(releases) - 1], row[12]))
+    print(str(contadores['line'] - 1) + ' lançamento' +
+        ('s processados' if contadores['line'] > 2 else ' processado') + '. ' +
+        str(contadores['new']) + ' novo' + ('s' if contadores['new'] > 1 else '') + ' e ' +
+        str(contadores['old']) + ' antigo' + ('s' if contadores['old'] > 1 else '') + '.')
 
-                if json.loads(releases[len(releases) - 1])['thumb'] != "" and not os.path.exists(
-                    'img/' + row[column] + '.jpg'):
-                    req_img = Request(json.loads(releases[len(releases) - 1])['thumb'],
-                        headers={'User-Agent': 'Mozilla/5.0'})
-
-                    with open('img/' + row[column] + '.jpg', "wb") as file:
-                        with urlopen(req_img) as imagem_capa:
-                            file.write(imagem_capa.read())
-                        file.close()
-
-                contadores['line'] += 1
-                print_progress_bar(contadores['line'], len(list_discogs), length=50)
-
-        print(str(contadores['line'] - 1) + ' lançamento' +
-            ('s processados' if contadores['line'] > 2 else ' processado') + '. ' +
-            str(contadores['new']) + ' novo' + ('s' if contadores['new'] > 1 else '') + ' e ' +
-            str(contadores['old']) + ' antigo' + ('s' if contadores['old'] > 1 else '') + '.')
-
-        write_file()
+    write_file()
 
 args = parse_args()
 #Se estiver autenticado pelo token, o Discogs aceita 60 requisições por minuto, se não 25

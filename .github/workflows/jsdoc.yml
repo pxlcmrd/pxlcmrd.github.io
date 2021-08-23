@@ -11,10 +11,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Sleep for 5 minutes
-        uses: whatnick/wait-action@master
-        with:
-          time: '300s'
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Build
