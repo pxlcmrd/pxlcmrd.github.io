@@ -1,5 +1,4 @@
 """ Script para importar as capas e o JSON dos releases no discogs e salvar em um arquivo JS """
-import csv
 import json
 import urllib.request
 from urllib.request import Request, urlopen
@@ -185,7 +184,6 @@ def main():
     #carrega o arquivo csv
 
     #inicializa os contadores
-    column = 0
     contadores = {
         "line": 0,
         "new": 0,

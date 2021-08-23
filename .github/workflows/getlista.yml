@@ -2,7 +2,7 @@ name: Get Lista
 on:
   push:
     paths:
-      - '**.csv'
+      - 'getdata.py'
       - '!.github/workflows/**'
       - '.github/workflows/getlista.yml'
   workflow_dispatch:
