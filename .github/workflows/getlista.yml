@@ -1,10 +1,7 @@
 name: Get Lista
 on:
-  push:
-    paths:
-      - 'getdata.py'
-      - '!.github/workflows/**'
-      - '.github/workflows/getlista.yml'
+  schedule:
+    - cron: '0 15 * * *'
   workflow_dispatch:
 jobs:
   build:
