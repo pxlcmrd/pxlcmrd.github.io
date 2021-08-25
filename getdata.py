@@ -1,6 +1,7 @@
 """ Script para importar as capas e o JSON dos releases no discogs e salvar em um arquivo JS """
 from json import dumps, loads
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError
 from argparse import ArgumentParser
 from time import time, sleep
 import os
@@ -34,11 +35,19 @@ def parse_args():
 
 def get_release(id_release):
     """ Realiza uma requisição para obter o JSON do release """
-    with urlopen('https://api.discogs.com/releases/' + str(id_release) +
-                 '?token=' + args.token) as response:
-        data = response.read()
-        encoding = response.info().get_content_charset('utf-8')
-        return dumps(loads(data.decode(encoding)), ensure_ascii=False, separators=(',', ':'))
+    while True:
+        try:
+            with urlopen('https://api.discogs.com/releases/' + str(id_release) +
+                         '?token=' + args.token) as response:
+                data = response.read()
+            break
+        except HTTPError:
+            print("Limite excedido. Hora de descansar...")
+            sleep(30)
+            print("Voltando...")
+
+    encoding = response.info().get_content_charset('utf-8')
+    return dumps(loads(data.decode(encoding)), ensure_ascii=False, separators=(',', ':'))
 
 def write_file():
     """ Salva os arquivos js (completo e minimizado) """
