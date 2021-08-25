@@ -1,24 +1,14 @@
 """ Script para importar as capas e o JSON dos releases no discogs e salvar em um arquivo JS """
-import json
-import urllib.request
+from json import dumps, loads
 from urllib.request import Request, urlopen
 from argparse import ArgumentParser
-import time
+from time import time, sleep
 import os
 
+# pylint: disable-msg=C0103
 releases = []
 releases_min = []
 timelap = []
-
-def mean_time():
-    """ Calcula o tempo médio de execução das requisições ao discogs """
-    timelap.append(time.time())
-    if len(timelap) > 10:
-        timelap.pop(0)
-    mean = 0
-    for steps in range(len(timelap) - 1):
-        mean = mean + timelap[steps] - timelap[steps + 1]
-    return -mean / len(timelap)
 
 def get_lista_atual():
     """ Obtém a lista atual (se existir) de JSON's salvos """
@@ -26,7 +16,7 @@ def get_lista_atual():
         #tenta abrir o arquivo de saída se ele existir
         with open('js/list.js', encoding="utf8") as saida_antiga:
             #carrega o json no python
-            return json.loads(saida_antiga.readline()[11:-1])
+            return loads(saida_antiga.readline()[11:-1])
     except ValueError:
         return []
     except FileNotFoundError:
@@ -35,58 +25,44 @@ def get_lista_atual():
 def parse_args():
     """ Trata os argumentos passados na linha de comando """
     parser = ArgumentParser()
-    parser.add_argument('-c', required=False, help='arquivo csv da coleção', dest='file')
-    parser.add_argument('-f', '--force', nargs='+', required=False, dest='force',
-        help='--force [Ids de releases para forçarem a ser baixados e sobrescritos]')
+    parser.add_argument('-f', '--force', action='store_true', dest='force',
+                        help='--force [Força o release a ser baixado novamente]')
     parser.add_argument('-t', '--token', required=False, dest='token',
-        default='PEQJMbWyIhFclTjZKBdCeHQcdgueLISCQNvfqgkO',
-        help='--token [Token (chave) de acesso pessoal para desenvolvedor]')
+                        default='PEQJMbWyIhFclTjZKBdCeHQcdgueLISCQNvfqgkO',
+                        help='--token [Token (chave) de acesso pessoal para desenvolvedor]')
     return parser.parse_args()
 
 def get_release(id_release):
     """ Realiza uma requisição para obter o JSON do release """
-    with urllib.request.urlopen("https://api.discogs.com/releases/" + str(id_release) +
-        ('?token=' + args.token if args.token is not None else '')) as response:
+    with urlopen('https://api.discogs.com/releases/' + str(id_release) +
+                 '?token=' + args.token) as response:
         data = response.read()
         encoding = response.info().get_content_charset('utf-8')
-        return json.dumps(json.loads(data.decode(encoding)),
-            ensure_ascii=False, separators=(',', ':'))
-
-def print_progress_bar(iteration, total, decimals=1, length=100, fill='█'):
-    """ Imprime a barra de progresso """
-    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filled_length = int(length * iteration // total)
-    barra = fill * filled_length + '-' * (length - filled_length)
-    estimate_total_time = int(mean_time() * (total - iteration))
-    estimate_output = '(' + (str(estimate_total_time) if estimate_total_time < 60 else
-        str(estimate_total_time // 60) + 'm ' + str(estimate_total_time % 60)) + 's)'
-    print('\r%s |%s| %s%% %s' % ('Progress:', barra, percent, estimate_output), end='\r')
-    if iteration == total:
-        print()
-    return True
+        return dumps(loads(data.decode(encoding)), ensure_ascii=False, separators=(',', ':'))
 
 def write_file():
     """ Salva os arquivos js (completo e minimizado) """
     def get_id_sort(release):
-        return json.loads(release)['id']
+        return loads(release)['id']
 
     with open('js/list.js', '+w', encoding="utf8") as f_completo, open('js/list.min.js', '+w',
-        encoding="utf8") as f_min:
+                                                                       encoding="utf8") as f_min:
         #Ordena a lista
         releases.sort(key=get_id_sort)
         releases_min.sort(key=get_id_sort)
         f_completo.write('var list = [' +
-            ','.join(releases).replace('True', 'true').replace('None', 'null') + '];')
+                         ','.join(releases).replace('True', 'true').replace('None', 'null') + '];')
         f_min.write('var list = [' +
-            ','.join(releases_min).replace('True', 'true').replace('None', 'null') + '];')
+                    ','.join(releases_min).replace('True', 'true').replace('None', 'null') + '];')
 
         f_min.close()
 
+    print('')
     print('Arquivo list.js e list.min.js salvos com sucesso!')
 
-def minimize_file(str_json, lancamento = ""):
+def minimize_file(str_json, lancamento=""):
     """ Minimiza o JSON removendo campos desnecessários """
-    obj = json.loads(str_json)
+    obj = loads(str_json)
 
     def minimize_artist(arr_artist):
         if arr_artist is None:
@@ -99,10 +75,11 @@ def minimize_file(str_json, lancamento = ""):
             })
             if artist.get('anv') != "" and artist.get('anv') is not None:
                 arr_artist_min[len(arr_artist_min) - 1]["anv"] = artist['anv']
+
             arr_artist_min[len(arr_artist_min) - 1]["id"] = artist['id']
+
             if artist.get('thumbnail_url') != "" and artist.get('thumbnail_url') is not None:
-                arr_artist_min[len(arr_artist_min) - 1]["thumbnail_url"] = artist[
-                'thumbnail_url']
+                arr_artist_min[len(arr_artist_min) - 1]["thumbnail_url"] = artist['thumbnail_url']
 
         return arr_artist_min
 
@@ -133,7 +110,7 @@ def minimize_file(str_json, lancamento = ""):
 
         return arr_tracks_min
 
-    return json.dumps({
+    return dumps({
         "id": obj['id'],
         "title": obj['title'],
         "artists_sort": obj['artists_sort'],
@@ -154,11 +131,14 @@ def minimize_file(str_json, lancamento = ""):
 def get_collection(list_discogs):
     """ Obtém a lista de releases atuais na coleção """
     i = 1
+    PER_PAGE = 100
     while True:
-        with urllib.request.urlopen("https://api.discogs.com/users/raphaelzera/collection/" +
-            "folders/0/releases?per_page=100&page=" + str(i) + '&token=' + args.token) as response:
-            dados = json.loads(response.read())
-            print('Page: ' + str(i) + '/' + str(dados['pagination']['pages']))
+        with urlopen('https://api.discogs.com/users/raphaelzera/collection/folders/0/releases?' +
+                     'per_page='+ str(PER_PAGE) + "&page=" + str(i) +
+                     '&token=' + args.token) as response:
+            dados = loads(response.read())
+            print('Obtidos ' + str(min(dados['pagination']['items'], i * PER_PAGE)) + ' de ' +
+                  str(dados['pagination']['items']))
 
             for release in dados['releases']:
                 list_discogs.append({
@@ -166,7 +146,7 @@ def get_collection(list_discogs):
                     "lancamento": release['notes'][2]['value']
                 })
 
-            i = i + 1
+            i += 1
 
             if i > dados['pagination']['pages']:
                 break
@@ -178,50 +158,51 @@ def get_id(obj):
 
 def main():
     """ Função principal """
+
     lista_atual = get_lista_atual()
     #mapeia apenas o id dos releases
     index_lista_atual = list(map(get_id, lista_atual))
-    #carrega o arquivo csv
 
     #inicializa os contadores
     contadores = {
         "line": 0,
         "new": 0,
         "old": 0
-        #line_count = 0
-        #new_count = 0
-        #old_count = 0
     }
 
+    print('Buscando coleção do Discogs...')
     list_discogs = []
     get_collection(list_discogs)
-    print_progress_bar(contadores['line'], len(list_discogs), length=50)
+
+    print('')
+    print('Processando releases...')
     for row in list_discogs:
-        #Tenta ver se o release lido do csv já existe no list.js
+        #Tenta ver se o release já existe no list.js
         try:
-            if args.force is not None and args.force.count(str(row['id'])) >= 1:
+            #Se a flag for passada, então é pra forçar a baixar novamente
+            if args.force:
                 raise ValueError
+
             #Se existir ele é reaproveitado
-            releases.append(json.dumps(
-                lista_atual[index_lista_atual.index(row['id'])],
-                ensure_ascii=False, separators=(',', ':')))
+            releases.append(dumps(lista_atual[index_lista_atual.index(row['id'])],
+                                  ensure_ascii=False, separators=(',', ':')))
             contadores['old'] += 1
         except ValueError:
             #Se não existir então carrega do discogs
-            entrada = time.time()
+            entrada = time()
             releases.append(get_release(row['id']))
             contadores['new'] += 1
             #O processo tem que dormir para não estourar o limite de acessos do discogs
-            saida = time.time()
+            saida = time()
             if LIMIT > saida - entrada:
-                time.sleep(LIMIT - saida + entrada)
+                sleep(LIMIT - saida + entrada)
 
         releases_min.append(minimize_file(releases[len(releases) - 1], row['lancamento']))
 
-        if json.loads(releases[len(releases) - 1])['thumb'] != "" and not os.path.exists(
-            'img/' + str(row['id']) + '.jpg'):
-            req_img = Request(json.loads(releases[len(releases) - 1])['thumb'],
-                headers={'User-Agent': 'Mozilla/5.0'})
+        if loads(releases[len(releases) - 1])['thumb'] != "" and not os.path.exists(
+                'img/' + str(row['id']) + '.jpg'):
+            req_img = Request(loads(releases[len(releases) - 1])['thumb'],
+                              headers={'User-Agent': 'Mozilla/5.0'})
 
             with open('img/' + str(row['id']) + '.jpg', "wb") as file:
                 with urlopen(req_img) as imagem_capa:
@@ -229,12 +210,14 @@ def main():
                 file.close()
 
         contadores['line'] += 1
-        print_progress_bar(contadores['line'], len(list_discogs), length=50)
 
-    print(str(contadores['line'] - 1) + ' lançamento' +
-        ('s processados' if contadores['line'] > 2 else ' processado') + '. ' +
-        str(contadores['new']) + ' novo' + ('s' if contadores['new'] > 1 else '') + ' e ' +
-        str(contadores['old']) + ' antigo' + ('s' if contadores['old'] > 1 else '') + '.')
+        if contadores['line'] % 100 == 0:
+            print('Processados ' + str(contadores['line']) + ' de ' + str(len(list_discogs)))
+
+    print(str(contadores['line']) + ' lançamento' +
+          ('s processados' if contadores['line'] > 2 else ' processado') + '. ' +
+          str(contadores['new']) + ' novo' + ('s' if contadores['new'] > 1 else '') + ' e ' +
+          str(contadores['old']) + ' antigo' + ('s' if contadores['old'] > 1 else '') + '.')
 
     write_file()
 
@@ -247,10 +230,5 @@ if not os.path.isdir('img'):
 
 if not os.path.isdir('js'):
     os.mkdir('js')
-
-for arquivo in os.listdir("."):
-    if arquivo.endswith(".csv"):
-        args.file = arquivo
-        break
 
 main()
