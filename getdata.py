@@ -33,21 +33,30 @@ def parse_args():
                         help='--token [Token (chave) de acesso pessoal para desenvolvedor]')
     return parser.parse_args()
 
-def get_release(id_release):
-    """ Realiza uma requisição para obter o JSON do release """
+def get_response(url):
+    """ Realiza uma requisição para obter uma resposta da API """
+    url_request = Request(url + 'token=' + args.token, headers={'User-Agent': 'Mozilla/5.0'})
+
     while True:
         try:
-            with urlopen('https://api.discogs.com/releases/' + str(id_release) +
-                         '?token=' + args.token) as response:
+            entrada = time()
+            with urlopen(url_request) as response:
                 data = response.read()
+            #O processo tem que dormir para não estourar o limite de acessos do discogs
+            saida = time()
+            if LIMIT > saida - entrada:
+                sleep(LIMIT - saida + entrada)
             break
         except HTTPError:
             print("Limite excedido. Hora de descansar...")
             sleep(30)
             print("Voltando...")
+    return data
 
-    encoding = response.info().get_content_charset('utf-8')
-    return dumps(loads(data.decode(encoding)), ensure_ascii=False, separators=(',', ':'))
+def get_release(id_release):
+    """ Realiza uma requisição para obter o JSON do release """
+    dados = get_response('https://api.discogs.com/releases/' + str(id_release) + '?')
+    return dumps(loads(dados.decode('utf-8')), ensure_ascii=False, separators=(',', ':'))
 
 def write_file():
     """ Salva os arquivos js (completo e minimizado) """
@@ -66,8 +75,7 @@ def write_file():
 
         f_min.close()
 
-    print('')
-    print('Arquivo list.js e list.min.js salvos com sucesso!')
+    print('\nArquivo list.js e list.min.js salvos com sucesso!')
 
 def minimize_file(str_json, lancamento=""):
     """ Minimiza o JSON removendo campos desnecessários """
@@ -142,23 +150,21 @@ def get_collection(list_discogs):
     i = 1
     PER_PAGE = 100
     while True:
-        with urlopen('https://api.discogs.com/users/raphaelzera/collection/folders/0/releases?' +
-                     'per_page='+ str(PER_PAGE) + "&page=" + str(i) +
-                     '&token=' + args.token) as response:
-            dados = loads(response.read())
-            print('Obtidos ' + str(min(dados['pagination']['items'], i * PER_PAGE)) + ' de ' +
-                  str(dados['pagination']['items']))
+        dados = loads(get_response('https://api.discogs.com/users/raphaelzera/collection/folders/' +
+                                   '0/releases?per_page='+ str(PER_PAGE) + "&page=" + str(i) + '&'))
+        print('Obtidos ' + str(min(dados['pagination']['items'], i * PER_PAGE)) + ' de ' +
+              str(dados['pagination']['items']))
 
-            for release in dados['releases']:
-                list_discogs.append({
-                    "id": release['id'],
-                    "lancamento": release['notes'][2]['value']
-                })
+        for release in dados['releases']:
+            list_discogs.append({
+                "id": release['id'],
+                "lancamento": release['notes'][2]['value']
+            })
 
-            i += 1
+        i += 1
 
-            if i > dados['pagination']['pages']:
-                break
+        if i > dados['pagination']['pages']:
+            break
     return list_discogs
 
 def get_id(obj):
@@ -183,8 +189,7 @@ def main():
     list_discogs = []
     get_collection(list_discogs)
 
-    print('')
-    print('Processando releases...')
+    print('\nProcessando releases...')
     for row in list_discogs:
         #Tenta ver se o release já existe no list.js
         try:
@@ -198,24 +203,16 @@ def main():
             contadores['old'] += 1
         except ValueError:
             #Se não existir então carrega do discogs
-            entrada = time()
             releases.append(get_release(row['id']))
             contadores['new'] += 1
-            #O processo tem que dormir para não estourar o limite de acessos do discogs
-            saida = time()
-            if LIMIT > saida - entrada:
-                sleep(LIMIT - saida + entrada)
 
         releases_min.append(minimize_file(releases[len(releases) - 1], row['lancamento']))
 
         if loads(releases[len(releases) - 1])['thumb'] != "" and not os.path.exists(
                 'img/' + str(row['id']) + '.jpg'):
-            req_img = Request(loads(releases[len(releases) - 1])['thumb'],
-                              headers={'User-Agent': 'Mozilla/5.0'})
-
             with open('img/' + str(row['id']) + '.jpg', "wb") as file:
-                with urlopen(req_img) as imagem_capa:
-                    file.write(imagem_capa.read())
+                imagem_capa = get_response(loads(releases[len(releases) - 1])['thumb'] + '?')
+                file.write(imagem_capa)
                 file.close()
 
         contadores['line'] += 1
