@@ -2,10 +2,10 @@ name: Build
 on:
   push:
     paths:
-      - 'js/externs.js'
       - 'js/list.min.js'
       - 'js/main.js'
-      - 'index.html'
+      - 'index_dev.html'
+      - 'Makefile'
       - '!.github/workflows/**'
       - '.github/workflows/build.yml'
   workflow_dispatch:
