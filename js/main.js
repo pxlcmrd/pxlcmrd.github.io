@@ -29,6 +29,7 @@ var main = (function Main() {
         //Lista de releases especiais que precisam ser tratados diferenciadamente
         var arrTrilhas = [2143936, 2693281, 7555262, 7676934, 11127346, 11490895, 12754176, 12774862, 13446777, 14890131];
         var arrNovelas = [221276, 517593, 1348132, 4325218, 1361899, 1378901, 1788971, 2211613, 2413935, 2520470, 2520504, 2533013, 2590676, 2633561, 2658406, 2812048, 5211379, 10771082];
+        var arrFunk = [150471, 1474868, 1474882, 1932210, 1932223, 1940378, 3516220, 3760402, 11451134];
 
         /**
          * @function limpaStr
@@ -58,7 +59,7 @@ var main = (function Main() {
          */
         function verificaArtistasEspeciais(release) {
             //Verifica casos de tradução de nome
-            if (release.id == 14996403 || release.id == 14970948) {
+            if (release.id == 14996403 || release.id == 14970948 || release.id == 16205869) {
                 return 'Molchat Doma';
             }
 
@@ -87,7 +88,7 @@ var main = (function Main() {
             }
 
             //Verifica Vários e desconhecidos ou trilha sonoras
-            if (release.artists_sort == 'Various' || release.artists_sort == 'Unknown Artist' || arrTrilhas.indexOf(Number(release.id)) > 0 || arrNovelas.indexOf(Number(release.id)) > 0) {
+            if (release.artists_sort == 'Various' || release.artists_sort == 'Unknown Artist' || arrTrilhas.indexOf(Number(release.id)) > 0 || arrNovelas.indexOf(Number(release.id)) > 0 || arrFunk.indexOf(Number(release.id)) > 0) {
                 return release.title;
             }
 
@@ -128,7 +129,9 @@ var main = (function Main() {
          * ordenação para garantir que o álbum vá para a posição desejada
          */
         function verificaTrilhaSonora(release) {
-            if (arrTrilhas.indexOf(Number(release.id)) >= 0) {
+            if (arrFunk.indexOf(Number(release.id)) >= 0) {
+                return '~|';
+            } if (arrTrilhas.indexOf(Number(release.id)) >= 0) {
                 return '~}';
             } else if (arrNovelas.indexOf(Number(release.id)) >= 0) {
                 return '~~' + limpaStr(release.title);
@@ -148,7 +151,7 @@ var main = (function Main() {
         function verificaVariosDesconhecidos(release) {
             //Exceções como álbuns de tributos
             var arrExcecoes = [15421432, 13770359];
-            if ((release.artists_sort == 'Various' || release.artists_sort == 'Unknown Artist') && arrExcecoes.indexOf(Number(release.id)) < 0 && arrTrilhas.indexOf(Number(release.id)) < 0 && arrNovelas.indexOf(Number(release.id) < 0)) {
+            if ((release.artists_sort == 'Various' || release.artists_sort == 'Unknown Artist') && arrExcecoes.indexOf(Number(release.id)) < 0 && arrTrilhas.indexOf(Number(release.id)) < 0 && arrNovelas.indexOf(Number(release.id) < 0) && arrFunk.indexOf(Number(release.id) < 0)) {
                 return '~';
             } else {
                 return '}';
@@ -162,7 +165,7 @@ var main = (function Main() {
          *   <li>Duas categorias principais, I e II, sendo descritas e ordenadas conforme a seguir:
          *     <ol>
          *       <li>Categoria I: LPs, 12" e 10";</li>
-         *       <li>Categoria II: 7",</li>
+         *       <li>Categoria II: 7".</li>
          *     </ol>
          *   </li>
          *   <li>Categoria I deve ser dividida e ordenada conforme a seguir:
@@ -170,6 +173,7 @@ var main = (function Main() {
          *       <li>Principais: Lançamentos comuns de um artista ou conjunto que não se enquadram nas categorias abaixo;</li>
          *       <li>Vários artistas: Lançamentos comuns que contém vários artistas ou conjuntos ou artistas desconhecidos que não seja álbum de tributo e que não se enquadram nas categorias abaixo;</li>
          *       <li>Compilações: Lançamentos com apanhado de trilhas não inéditas (que pertencem a produtos lançados previamente). Não inclui compilações de conteúdos inéditos nem lançamentos que se enquadram nas categorias abaixo;</li>
+         *       <li>Funk Carioca/Miami Bass: Lançamentos que se enquadram no estilo ou gênero de Funk carioca, Rap Freestyle, Miami Bass, Funk melody da primeira e segunda geração, Charme, etc.;</li>
          *       <li>Trilhas sonoras: Lançamentos que compreendem a trilha sonora de uma produção. Deve ser subcategorizado e ordenado como a seguir:
          *         <ol>
          *           <li>Produções: Trilhas de filmes, jogos, séries, programas televisivos, etc;</li>
@@ -356,6 +360,139 @@ var main = (function Main() {
             '</div>';
 
         return html;
+    }
+
+    /**
+     * @description Instancia o atalho alfabético na interface da listagem ordenada de lançamentos 
+     * @function geraAtalhosListaOrdenada
+     * @param  {Array<Releases>} lista_ordenada - Lista ordenada de lançamentos
+     */
+    function geraAtalhosListaOrdenada(lista_ordenada) {
+        var letras = [{
+            id: "num",
+            label: "#",
+            regex: /^\d/i
+        }, {
+            id: "A",
+            label: "A",
+            regex: /^a/i
+        }, {
+            id: "B",
+            label: "B",
+            regex: /^b/i
+        }, {
+            id: "C",
+            label: "C",
+            regex: /^c/i
+        }, {
+            id: "D",
+            label: "D",
+            regex: /^d/i
+        }, {
+            id: "E",
+            label: "E",
+            regex: /^e/i
+        }, {
+            id: "F",
+            label: "F",
+            regex: /^f/i
+        }, {
+            id: "G",
+            label: "G",
+            regex: /^g/i
+        }, {
+            id: "H",
+            label: "H",
+            regex: /^h/i
+        }, {
+            id: "I",
+            label: "I",
+            regex: /^i/i
+        }, {
+            id: "J",
+            label: "J",
+            regex: /^j/i
+        }, {
+            id: "K",
+            label: "K",
+            regex: /^k/i
+        }, {
+            id: "L",
+            label: "L",
+            regex: /^l/i
+        }, {
+            id: "M",
+            label: "M",
+            regex: /^m/i
+        }, {
+            id: "N",
+            label: "N",
+            regex: /^n/i
+        }, {
+            id: "O",
+            label: "O",
+            regex: /^o/i
+        }, {
+            id: "P",
+            label: "P",
+            regex: /^p/i
+        }, {
+            id: "Q",
+            label: "Q",
+            regex: /^q/i
+        }, {
+            id: "R",
+            label: "R",
+            regex: /^r/i
+        }, {
+            id: "S",
+            label: "S",
+            regex: /^s/i
+        }, {
+            id: "T",
+            label: "T",
+            regex: /^t/i
+        }, {
+            id: "U",
+            label: "U",
+            regex: /^u/i
+        }, {
+            id: "V",
+            label: "V",
+            regex: /^v/i
+        }, {
+            id: "W",
+            label: "W",
+            regex: /^w/i
+        }, {
+            id: "X",
+            label: "X",
+            regex: /^x/i
+        }, {
+            id: "Y",
+            label: "Y",
+            regex: /^y/i
+        }, {
+            id: "Z",
+            label: "Z",
+            regex: /^z/i
+        }];
+
+        for (var i = 0, j; i < letras.length; i++) {
+            //localiza índices
+            for (j = 0; j < lista_ordenada.length && letras[i].index === undefined; j++) {
+                if (letras[i].regex.test(lista_ordenada[j].artists_sort)) {
+                    //console.log(letras[i].label, j, lista_ordenada[j].artists_sort);
+                    letras[i].index = j;
+                }
+            }
+            //renderiza HTML
+            if (letras[i].index !== undefined) {
+                //seta o id na tabela
+                $('#tabela_lista_ordenada tr:eq(' + (letras[i].index + 1) + ')').attr('id', letras[i].id)
+            }
+            $('#lista_ordenada .atalhos [name="' + letras[i].id + '"]').html('<a href="' + letras[i].id + '" tipo="atalho">' + letras[i].label + '</a>');
+        }
     }
 
     /**
@@ -571,7 +708,8 @@ var main = (function Main() {
                 $('#releases, #top_lista').show();
             } else if ($(this).attr('href') == 'lista_ordenada') {
                 resetButtons($(this));
-                $('#lista_ordenada').show().find('#tabela_lista_ordenada tbody').html(ordena().reduce(function(a, v, i) {
+                var lista_ordenada = ordena();
+                $('#lista_ordenada').show().find('#tabela_lista_ordenada tbody').html(lista_ordenada.reduce(function(a, v, i) {
                     return a +
                         '<tr>\n' +
                         '  <th scope="row">' + (i + 1) + '</th>\n' +
@@ -581,6 +719,13 @@ var main = (function Main() {
                         '  <td>' + getNomeFormato(v.formats[0]) + '</td>\n' +
                         '</tr>\n';
                 }, ''));
+                geraAtalhosListaOrdenada(lista_ordenada);
+            } else if ($(this).attr('tipo') == 'atalho') {
+                $('#' + $(this).attr('href'))[0].scrollIntoView({
+                    block: "center"
+                })
+            } else {
+                console.warn('click não implementado')
             }
         });
 

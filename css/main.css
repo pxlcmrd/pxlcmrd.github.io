@@ -6261,3 +6261,26 @@ body::-webkit-scrollbar-thumb {
     width: 64px;
   }
 }
+
+#lista_ordenada {
+  margin-top: 160px;
+}
+
+.atalhos {
+  display: block;
+  position: fixed;
+  top: 130px;
+  background-color: #16151a;
+  width: 100%;
+  z-index: 1;
+}
+
+.atalhos table {
+  color: #505050;
+  text-align: center;
+  width: 100%;
+}
+
+.atalhos a {
+  color: #FFF;
+}
