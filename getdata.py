@@ -131,7 +131,7 @@ def minimize_file(str_json, lancamento=""):
         "id": obj['id'],
         "title": obj['title'],
         "artists_sort": obj['artists_sort'],
-        "country": obj['country'],
+        "country": obj['country'] if 'country' in obj else "",
         "genres": obj['genres'],
         "styles": obj['styles'] if 'styles' in obj else [],
         "community": {
