@@ -10,7 +10,7 @@ def print_table(lista_sem_img):
     max_width = [len(titulos[0]), len(titulos[1]), len(titulos[2])]
 
     if len(lista_sem_img) == 0:
-        return 0;
+        return
 
     for release in lista_sem_img:
         max_width[0] = max(max_width[0], len(release[0]))
@@ -22,10 +22,9 @@ def print_table(lista_sem_img):
         ('─' * (max_width[2] + 2)) + '┐')
 
     cabecalho = ''
-    for i in range(len(titulos)):
-        cabecalho = cabecalho + '│ ' + (' ' * math.floor((max_width[i] -
-        len(titulos[i])) / 2)) + titulos[i] + (' ' * math.ceil(1 + (max_width[i] -
-        len(titulos[i])) / 2))
+    for index, value in enumerate(titulos):
+        cabecalho = cabecalho + '│ ' + (' ' * math.floor((max_width[index] -
+        len(value)) / 2)) + value + (' ' * math.ceil(1 + (max_width[index] - len(value)) / 2))
 
     print (cabecalho + '│')
     print('├' + ('─' * (max_width[0] + 2)) + '┼' + ('─' * (max_width[1] + 2)) + '┼' +
@@ -39,6 +38,7 @@ def print_table(lista_sem_img):
 
     print('└' + ('─' * (max_width[0] + 2)) + '┴' + ('─' * (max_width[1] + 2)) + '┴' +
         ('─' * (max_width[2] + 2)) + '┘')
+    return
 
 def main():
     """ Função principal """
@@ -49,7 +49,7 @@ def main():
             count_erro_track = 0
             line_count = 0
             lista_sem_img = []
-            lista_com_erro = '';
+            lista_com_erro = ''
 
             #Lê o conteúdo do list.js
             list_discogs = loads(arquivo.readline()[11:-1])
@@ -61,8 +61,10 @@ def main():
                     count += 1
 
                 for track in row['tracklist']:
-                    if track['type_'] == 'track' and not re.match(r"^(Video)? ?[A-Z\d]+[.-]?[A-Za-z\d]* ?$", track['position']):
-                        lista_com_erro = lista_com_erro + ('\n' + str(row['id']) + ' - ' + row['title'] + ' (' + track['position'] + ')')
+                    if track['type_'] == 'track' and not re.match(
+                                    r"^(Video)? ?[A-Z\d]+[.-]?[A-Za-z\d]* ?$", track['position']):
+                        lista_com_erro = lista_com_erro + ('\n' + str(row['id']) +
+                                            ' - ' + row['title'] + ' (' + track['position'] + ')')
                         count_erro_track += 1
                         break
 
@@ -74,8 +76,9 @@ def main():
 
             print_table(lista_sem_img)
 
-            if (count_erro_track > 0):
-                print('\n' + str(count_erro_track) + ' lançamento' + ('s' if count_erro_track > 1 else '') + ' com erro nas faixas.')
+            if count_erro_track > 0:
+                print('\n' + str(count_erro_track) + ' lançamento' +
+                            ('s' if count_erro_track > 1 else '') + ' com erro nas faixas.')
                 print(lista_com_erro)
             else:
                 print('Nenhum lançamento com erro nas faixas encontrado.')
