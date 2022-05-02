@@ -35,7 +35,9 @@ def parse_args():
 
 def get_response(url):
     """ Realiza uma requisição para obter uma resposta da API """
-    url_request = Request(url + 'token=' + args.token, headers={'User-Agent': 'Mozilla/5.0'})
+    url_request = Request(url + 'token=' + args.token, headers={'User-Agent': 'Mozilla/5.0 ' +
+    '(Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 ' +
+    '(KHTML, like Gecko) Chrome/100.0.4896.60 Mobile Safari/537.36'})
 
     while True:
         try:
@@ -148,7 +150,7 @@ def minimize_file(str_json, lancamento=""):
 def get_collection(list_discogs):
     """ Obtém a lista de releases atuais na coleção """
     i = 1
-    PER_PAGE = 100
+    PER_PAGE = 200
     while True:
         dados = loads(get_response('https://api.discogs.com/users/raphaelzera/collection/folders/' +
                                    '0/releases?per_page='+ str(PER_PAGE) + "&page=" + str(i) + '&'))
