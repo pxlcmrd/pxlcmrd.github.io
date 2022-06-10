@@ -26,10 +26,6 @@ var main = (function Main() {
      */
     var ordena = function() {
         var lista = JSON.parse(JSON.stringify(list));
-        //Lista de releases especiais que precisam ser tratados diferenciadamente
-        var arrTrilhas = [2143936, 2693281, 7555262, 7676934, 11127346, 11490895, 12754176, 12774862, 13446777, 14890131];
-        var arrNovelas = [221276, 517593, 1348132, 4325218, 1361899, 1378901, 1788971, 2211613, 2413935, 2520470, 2520504, 2533013, 2590676, 2633561, 2658406, 2812048, 5211379, 10771082];
-        var arrFunk = [150471, 1474868, 1474882, 1932210, 1932223, 1940378, 3516220, 3760402, 11451134];
 
         /**
          * @function limpaStr

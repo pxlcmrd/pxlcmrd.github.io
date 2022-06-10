@@ -1,6 +1,6 @@
 OUTPUT_JS=js/all.min.js
 EXTERNS=js/externs.js
-SOURCES_JS=js/list.min.js js/main.js
+SOURCES_JS=js/list.min.js js/main.js js/arrFunk.js js/arrNovelas.js js/arrTrilhas.js
 SOURCE_INDEX=index_dev.html
 INDEX=index.html
 
