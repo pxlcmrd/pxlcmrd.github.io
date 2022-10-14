@@ -58,12 +58,12 @@ def get_response(url):
 def get_release(id_release):
     """ Realiza uma requisição para obter o JSON do release """
     dados = get_response('https://api.discogs.com/releases/' + str(id_release) + '?')
-    return dumps(loads(dados.decode('utf-8')), ensure_ascii=False, separators=(',', ':'))
+    return loads(dados.decode('utf-8'))
 
 def write_file():
     """ Salva os arquivos js (completo e minimizado) """
     def get_id_sort(release):
-        return loads(release)['id']
+        return release['id']
 
     with open('js/list.js', '+w', encoding="utf8") as f_completo, open('js/list.min.js', '+w',
                                                                        encoding="utf8") as f_min:
@@ -71,9 +71,9 @@ def write_file():
         releases.sort(key=get_id_sort)
         releases_min.sort(key=get_id_sort)
         f_completo.write('var list = [' +
-                         ','.join(releases).replace('True', 'true').replace('None', 'null') + '];')
+                         ','.join(list(map(lambda x: dumps(x, ensure_ascii=False, separators=(',', ':')), releases))) + '];')
         f_min.write('var list = [' +
-                    ','.join(releases_min).replace('True', 'true').replace('None', 'null') + '];')
+                    ','.join(list(map(lambda x: dumps(x, ensure_ascii=False, separators=(',', ':')), releases_min))) + '];')
 
         f_min.close()
 
@@ -81,7 +81,7 @@ def write_file():
 
 def minimize_file(str_json, lancamento=""):
     """ Minimiza o JSON removendo campos desnecessários """
-    obj = loads(str_json)
+    obj = str_json
 
     def minimize_artist(arr_artist):
         if arr_artist is None:
@@ -129,7 +129,7 @@ def minimize_file(str_json, lancamento=""):
 
         return arr_tracks_min
 
-    return dumps({
+    return {
         "id": obj['id'],
         "title": obj['title'],
         "artists_sort": obj['artists_sort'],
@@ -145,12 +145,12 @@ def minimize_file(str_json, lancamento=""):
         "lancamento": lancamento,
         "artists": minimize_artist(obj['artists']),
         "tracklist": minimize_track(obj['tracklist'])
-    }, ensure_ascii=False, separators=(',', ':'))
+    }
 
 def get_collection(list_discogs):
     """ Obtém a lista de releases atuais na coleção """
     i = 1
-    PER_PAGE = 200
+    PER_PAGE = 400
     while True:
         dados = loads(get_response('https://api.discogs.com/users/raphaelzera/collection/folders/' +
                                    '0/releases?per_page='+ str(PER_PAGE) + "&page=" + str(i) + '&'))
@@ -200,8 +200,7 @@ def main():
                 raise ValueError
 
             #Se existir ele é reaproveitado
-            releases.append(dumps(lista_atual[index_lista_atual.index(row['id'])],
-                                  ensure_ascii=False, separators=(',', ':')))
+            releases.append(lista_atual[index_lista_atual.index(row['id'])])
             contadores['old'] += 1
         except ValueError:
             #Se não existir então carrega do discogs
@@ -210,10 +209,10 @@ def main():
 
         releases_min.append(minimize_file(releases[len(releases) - 1], row['lancamento']))
 
-        if loads(releases[len(releases) - 1])['thumb'] != "" and not os.path.exists(
+        if releases[len(releases) - 1]['thumb'] != "" and not os.path.exists(
                 'img/' + str(row['id']) + '.jpg'):
             with open('img/' + str(row['id']) + '.jpg', "wb") as file:
-                imagem_capa = get_response(loads(releases[len(releases) - 1])['thumb'] + '?')
+                imagem_capa = get_response(releases[len(releases) - 1]['thumb'] + '?')
                 file.write(imagem_capa)
                 file.close()
 
