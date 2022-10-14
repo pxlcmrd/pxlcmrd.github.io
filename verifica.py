@@ -9,7 +9,7 @@ def print_table(lista_sem_img):
     titulos = ['id', 'Artista', 'Título']
     max_width = [len(titulos[0]), len(titulos[1]), len(titulos[2])]
 
-    if len(lista_sem_img) == 0:
+    if not lista_sem_img:
         return
 
     for release in lista_sem_img:
@@ -19,25 +19,28 @@ def print_table(lista_sem_img):
 
     #Cabecalho
     print('┌' + ('─' * (max_width[0] + 2)) + '┬' + ('─' * (max_width[1] + 2)) + '┬' +
-        ('─' * (max_width[2] + 2)) + '┐')
+          ('─' * (max_width[2] + 2)) + '┐')
 
     cabecalho = ''
     for index, value in enumerate(titulos):
-        cabecalho = cabecalho + '│ ' + (' ' * math.floor((max_width[index] -
-        len(value)) / 2)) + value + (' ' * math.ceil(1 + (max_width[index] - len(value)) / 2))
+        cabecalho += '│ ' + (' ' *
+                             math.floor((max_width[index] - len(value))
+                                        / 2)) + value + (' ' *
+                                                         math.ceil(1 + (max_width[index]
+                                                                        - len(value)) / 2))
 
-    print (cabecalho + '│')
+    print(cabecalho + '│')
     print('├' + ('─' * (max_width[0] + 2)) + '┼' + ('─' * (max_width[1] + 2)) + '┼' +
-        ('─' * (max_width[2] + 2)) + '┤')
+          ('─' * (max_width[2] + 2)) + '┤')
 
     #Lista
     for release in lista_sem_img:
         print('│ ' + release[0] + (' ' * (max_width[0] - len(release[0]) + 1) + '│') +
-          ' ' + release[1] + (' ' * (max_width[1] - len(release[1]) + 1) + '│') +
-          ' ' + release[2] + (' ' * (max_width[2] - len(release[2]) + 1)) + '│')
+              ' ' + release[1] + (' ' * (max_width[1] - len(release[1]) + 1) + '│') +
+              ' ' + release[2] + (' ' * (max_width[2] - len(release[2]) + 1)) + '│')
 
     print('└' + ('─' * (max_width[0] + 2)) + '┴' + ('─' * (max_width[1] + 2)) + '┴' +
-        ('─' * (max_width[2] + 2)) + '┘')
+          ('─' * (max_width[2] + 2)) + '┘')
     return
 
 def main():
@@ -55,7 +58,7 @@ def main():
                 nonlocal count_erro_track
                 nonlocal lista_com_erro
                 lista_com_erro = lista_com_erro + ('\n' + motivo + ': ' + id_release +
-                                 ' - ' + title + ' (' + position + ')')
+                                                   ' - ' + title + ' (' + position + ')')
                 count_erro_track = count_erro_track + 1
 
             #Lê o conteúdo do list.js
@@ -70,32 +73,35 @@ def main():
                     lista_sem_img.append([str(row['id']), row['artists_sort'], row['title']])
                     count += 1
 
-                for track in row['tracklist']:
-                    if track['type_'] == 'track':
-                        if not re.match(
-                                    r"^(Video)? ?[A-Z\d]+[.-]?[A-Za-z\d]* ?$", track['position']):
-                            registra_erro_faixa('Cód. da posição', str(row['id']), row['title'], track['position'])
-                            break
+                tracklist = [a for a in row['tracklist'] if a['type_'] == 'track']
 
-                        matches = re.findall(r"['-]?\b[a-záéíóúàèìòùãẽĩõũâêîôûäëïöüç]+", track['title'], re.MULTILINE)
+                for track in tracklist:
+                    if not re.match(r"^(Video)? ?[A-Z\d]+[.-]?[A-Za-z\d]* ?$", track['position']):
+                        registra_erro_faixa('Cód. da posição', str(row['id']),
+                                            row['title'], track['position'])
+                        break
 
-                        if matches:
-                            for erros in matches:
-                                if erros not in list_capit_correta:
-                                    registra_erro_faixa('Capitalização', str(row['id']), track['title'], track['position'])
-                                    break
+                    matches = re.findall(r"['-]?\b[a-záéíóúàèìòùãẽĩõũâêîôûäëïöüç]+",
+                                         track['title'], re.MULTILINE)
+
+                    if matches:
+                        for erros in matches:
+                            if erros not in list_capit_correta:
+                                registra_erro_faixa('Capitalização', str(row['id']),
+                                                    track['title'], track['position'])
+                                break
 
                 line_count += 1
 
             print(str(line_count - 1) + ' lançamento' +
-                ('s processados' if line_count > 2 else ' processado') + '. ' +
-                str(count) + ' est' + ('ão' if count > 1 else 'á') + ' sem imagem.')
+                  ('s processados' if line_count > 2 else ' processado') + '. ' +
+                  str(count) + ' est' + ('ão' if count > 1 else 'á') + ' sem imagem.')
 
             print_table(lista_sem_img)
 
             if count_erro_track > 0:
                 print('\n' + str(count_erro_track) + ' lançamento' +
-                            ('s' if count_erro_track > 1 else '') + ' com erro nas faixas.')
+                      ('s' if count_erro_track > 1 else '') + ' com erro nas faixas.')
                 print(lista_com_erro)
             else:
                 print('Nenhum lançamento com erro nas faixas encontrado.')

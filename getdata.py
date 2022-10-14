@@ -35,9 +35,10 @@ def parse_args():
 
 def get_response(url):
     """ Realiza uma requisição para obter uma resposta da API """
-    url_request = Request(url + 'token=' + args.token, headers={'User-Agent': 'Mozilla/5.0 ' +
-    '(Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 ' +
-    '(KHTML, like Gecko) Chrome/100.0.4896.60 Mobile Safari/537.36'})
+    url_request = Request(url + 'token=' + args.token,
+                          headers={'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build' +
+                                                 '/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko)' +
+                                                 ' Chrome/100.0.4896.60 Mobile Safari/537.36'})
 
     while True:
         try:
@@ -71,9 +72,13 @@ def write_file():
         releases.sort(key=get_id_sort)
         releases_min.sort(key=get_id_sort)
         f_completo.write('var list = [' +
-                         ','.join(list(map(lambda x: dumps(x, ensure_ascii=False, separators=(',', ':')), releases))) + '];')
+                         ','.join(list(map(lambda x:
+                                           dumps(x, ensure_ascii=False, separators=(',', ':')),
+                                           releases))) + '];')
         f_min.write('var list = [' +
-                    ','.join(list(map(lambda x: dumps(x, ensure_ascii=False, separators=(',', ':')), releases_min))) + '];')
+                    ','.join(list(map(lambda x:
+                                      dumps(x, ensure_ascii=False, separators=(',', ':')),
+                                      releases_min))) + '];')
 
         f_min.close()
 
