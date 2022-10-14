@@ -51,8 +51,18 @@ def main():
             lista_sem_img = []
             lista_com_erro = ''
 
+            def registra_erro_faixa(motivo, id_release, title, position):
+                nonlocal count_erro_track
+                nonlocal lista_com_erro
+                lista_com_erro = lista_com_erro + ('\n' + motivo + ': ' + id_release +
+                                 ' - ' + title + ' (' + position + ')')
+                count_erro_track = count_erro_track + 1
+
             #Lê o conteúdo do list.js
             list_discogs = loads(arquivo.readline()[11:-1])
+
+            list_capit_correta = ['-me', '-la', '-te', '-se',
+                                  "'d", "'s", "'t", "'m", "'re", "'ll", "'ve", "'est"]
 
             for row in list_discogs:
                 #Tenta ver se a imagem do release lido do list.js existe na pasta
@@ -61,12 +71,19 @@ def main():
                     count += 1
 
                 for track in row['tracklist']:
-                    if track['type_'] == 'track' and not re.match(
+                    if track['type_'] == 'track':
+                        if not re.match(
                                     r"^(Video)? ?[A-Z\d]+[.-]?[A-Za-z\d]* ?$", track['position']):
-                        lista_com_erro = lista_com_erro + ('\n' + str(row['id']) +
-                                            ' - ' + row['title'] + ' (' + track['position'] + ')')
-                        count_erro_track += 1
-                        break
+                            registra_erro_faixa('Cód. da posição', str(row['id']), row['title'], track['position'])
+                            break
+
+                        matches = re.findall(r"['-]?\b[a-záéíóúàèìòùãẽĩõũâêîôûäëïöüç]+", track['title'], re.MULTILINE)
+
+                        if matches:
+                            for erros in matches:
+                                if erros not in list_capit_correta:
+                                    registra_erro_faixa('Capitalização', str(row['id']), track['title'], track['position'])
+                                    break
 
                 line_count += 1
 
