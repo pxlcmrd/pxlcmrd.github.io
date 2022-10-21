@@ -4,6 +4,7 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 from argparse import ArgumentParser
 from time import time, sleep
+from re import match
 import os
 
 # pylint: disable-msg=C0103
@@ -157,12 +158,16 @@ def get_collection(list_discogs):
     i = 1
     PER_PAGE = 400
     while True:
-        dados = loads(get_response('https://api.discogs.com/users/raphaelzera/collection/folders/' +
-                                   '0/releases?per_page='+ str(PER_PAGE) + "&page=" + str(i) + '&'))
-        print('Obtidos ' + str(min(dados['pagination']['items'], i * PER_PAGE)) + ' de ' +
-              str(dados['pagination']['items']))
+        dados = loads(get_response(
+            'https://api.discogs.com/users/raphaelzera/collection/folders/' +
+            '0/releases?per_page='+ str(PER_PAGE) + "&page=" + str(i) + '&'))
+        print('Obtidos ' + str(min(dados['pagination']['items'], i * PER_PAGE)) +
+              ' de ' + str(dados['pagination']['items']))
 
         for release in dados['releases']:
+            if len(release['notes']) < 3 or not match(r"\d{3}[\d\?]", release['notes'][2]['value']):
+                raise Exception('Data de lançamento não definida para o item ' + str(release['id']))
+
             list_discogs.append({
                 "id": release['id'],
                 "lancamento": release['notes'][2]['value']
