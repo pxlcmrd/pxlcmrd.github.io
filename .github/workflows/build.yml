@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.5.2
     - name: Build arquivos
       run: make
     - name: Commit builds
-      uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
+      uses: EndBug/add-and-commit@latest
       with:
         add: '["index.html", "js/all.min.js"]'
         author_name: pxlcmrd
