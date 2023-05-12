@@ -179,6 +179,14 @@ main {
   display: block !important;
 }
 
+#album .info {
+  width: 12rem;
+}
+
+.hide {
+  display: none;
+}
+
 /* Media queries */
 @media screen and (max-width: 576px) {
   #sidebar {

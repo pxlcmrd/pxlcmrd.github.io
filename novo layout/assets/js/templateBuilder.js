@@ -3,8 +3,9 @@ let builder = (function Builder() {
     /**
      * Constroi o HTML do item para interface
      * @function item
+     * @param {Object[]} albumList Array de objetos JSON com dados do álbum importados do Discogs
+     * @param {String} id
      * @param {String} title Título
-     * @param {String} artist Artista
      * @param {String} img Imagem
      * @return {String} Retorna o HTML
      */
@@ -14,17 +15,19 @@ let builder = (function Builder() {
             html +=
                 '<div class="playlist col-6 col-md-3 col-lg-2 d-flex flex-column mb-3 px-2">' +
                 '    <a class="position-relative" href="#">' +
-                '        <img class="img-fluid" src="../../pxlcmrd.github.io/img/' + album.id + '.jpg" alt="">' +
-                '        <div class="playlist_overlay position-absolute d-none w-100 h-100 bg-fading-black">' +
-                '            <i class="position-absolute far fa-play-circle"></i>' +
+                '        <img src="' + IMG_URL + album.id + '.jpg" class="img-fluid" alt="' + album.title + '">' +
+                '        <div class="playlist_overlay position-absolute d-none w-100 h-100 bg-fading-black" album-id="' + album.id + '">' +
+                '            <i class="position-absolute"></i>' +
                 '        </div>' +
                 '    </a>' +
                 '    <a href="#">' +
                 '        <h2 name="title" class="mt-3 text-white text-center">' + album.title + '</h2>' +
                 '    </a>' +
-                '    <a href="#" class="text-center">' +
-                '        <span name="artist" id="#">' + album.artist + '</span>' +
-                '    </a>' +
+                '    <span class="text-center">' +
+                '        ' + album.artists.map(function(a) {
+                    return '<a href="https://www.discogs.com/pt_BR/artist/' + a.id + '" target="_blank">' + a.name.replace(/(.*) \(\d+\)/gm, '$1') + '</a>';
+                }).join(', ') + '</span>' +
+                //'    </a>' +
                 '</div>';
         });
 
@@ -61,17 +64,19 @@ let builder = (function Builder() {
             }
 
             if (track.type_ == "index") {
-                html += $this.subtrack(track.sub_tracks);
+                html += $this.track(track.sub_tracks, 'subtrack');
             }
         });
-
-
 
         return html;
     };
 
-    this.subtrack = function(tracklist) {
-        return $this.track(tracklist, true);
+    this.album = function(album) {
+        var html =
+            '<h2 name="title" class="mt-3 text-white text-center">' + album.title + '</h2>' +
+            '<img src="' + IMG_URL + album.id + '.jpg">';
+
+        return html;
     };
 
     return this;
