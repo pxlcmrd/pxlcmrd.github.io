@@ -5,8 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>My Spotify</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
         <link rel="stylesheet" href="./assets/css/style.css">
         <link rel="shortcut icon" href="./assets/img/favicon.ico" type="image/x-icon">
     </head>
@@ -16,30 +15,30 @@
             <nav id="sidebar" class="d-flex justify-content-between flex-column fixed-left flex-shrink-0 px-0 text-grey bg-black">
                 <div class="wrapper">
                     <!-- Logo -->
-                    <a href="/" id="logo" class="d-flex align-items-center py-3 pl-3 disappear">
-                        <img src="./assets/img/logo.svg" class="w-75" alt="Spotify logo">
+                    <a href="#" name="logo" class="d-flex align-items-center py-3 ps-3 disappear">
+                        <img src="./assets/img/logo.svg" class="w-25" alt="Logo">
                     </a>
                     <!-- /Logo -->
 
                     <!-- Logo for XS devices -->
-                    <a class="d-none appear mb-4" href="/">
-                        <img src="./assets/img/logo-small.svg" alt="Small Spotify logo">
+                    <a name="logo" class="d-none appear mb-4" href="#">
+                        <img src="./assets/img/logo.svg" class="w-100" alt="Logo">
                     </a>
                     <!-- /Logo for XS devices -->
 
                     <!-- Sidebar options -->
                     <ul id="sidebar_options" class="px-0 disappear">
-                        <li class="position-relative pl-3 mb-2">
+                        <li class="position-relative ps-3 mb-2">
                             <a class="d-flex align-items-center" href="#">
                                 <img id="home" src="./assets/img/home.svg" alt="Icon depicting a house">
-                                <span class="ml-2 text-white">Home</span>
+                                <span class="ms-2 text-white">Home</span>
                             </a>
                         </li>
 
-                        <li class="pl-3 mb-2">
+                        <li class="ps-3 mb-2">
                             <a class="d-flex align-items-center" href="#">
                                 <img src="./assets/img/libreria.svg" class="img-fluid" alt="Icon depicting three vertical books">
-                                <span class="ml-2">Lista</span>
+                                <span class="ms-2">Lista</span>
                             </a>
                         </li>
                     </ul>
@@ -60,9 +59,9 @@
                 <!-- Profile options -->
                 <div id="profile" class="d-flex flex-column disappear">
                     <a href="https://www.discogs.com/pt_BR/user/raphaelzera/collection" target="_blank">
-                        <div id="user" class="d-flex align-items-center mt-3 mb-2 pl-3">
+                        <div id="user" class="d-flex align-items-center mt-3 mb-2 ps-3">
                             <div class="user_img d-flex justify-content-center align-items-center bg-grey rounded-circle"></div>
-                            <div id="profile_name" class="text-white ml-3">Discogs</div>
+                            <div id="profile_name" class="text-white ms-3">Discogs</div>
                         </div>
                     </a>
                 </div>
@@ -84,10 +83,10 @@
                     </button>
                 </div>
                 <!-- Informações de álbum -->
-                <div id="album" class="pl-3 pr-3 pt-4 hide">
+                <div id="album" class="ps-3 pe-3 pt-4 hide">
                     <div class="d-flex">
-                        <h1 class="pl-2 w-100 text-white">Informações</h1>
-                        <a href="#" class="fechar pl-2 fixed-right text-white">✕</a>
+                        <h1 class="ps-2 w-100 text-white">Informações</h1>
+                        <a href="#" class="fechar ps-2 fixed-right text-white">✕</a>
                     </div>
                     <div class="d-flex flex-row my-4">
                         <div class="info d-flex flex-column align-items-center">
@@ -100,8 +99,8 @@
                 </div>
                 <!-- /Informações de álbum -->
                 <!-- Lista de álbuns-->
-                <div id="list" class="d-flex flex-column pl-3 pr-1 pt-4">
-                    <h1 class="pl-2 text-white">Álbuns</h1>
+                <div id="list" class="d-flex flex-column ps-3 pe-1 pt-4">
+                    <h1 class="ps-2 text-white">Álbuns</h1>
                     <div class="playlist_row container-fluid d-flex my-4">
                         <div class="row w-100">
 
@@ -114,8 +113,7 @@
             <!-- /App content -->
         </div>
         <script src="../../pxlcmrd.github.io/js/list.min.js"></script>
-        <script src="./assets/js/jquery-3.6.4.slim.min.js"></script>
-        <script src="./assets/js/alasql.js"></script>
+        <script src="./assets/js/fuse.min.js"></script>
         <script src="./assets/js/templateBuilder.js"></script>
         <script src="./assets/js/app.js"></script>
     </body>

@@ -13,6 +13,10 @@ $tam-item-icon: 48px;
   font-weight: bold;
 }
 
+a {
+  text-decoration: none;
+}
+
 h1 {
   font-size: 1.8rem;
   font-weight: bold;
@@ -94,7 +98,9 @@ a {
       filter: brightness(0.5);
     }
   }
-
+  #user div:last-child {
+    font-size: 1rem;
+  }
   #profile a img {
     width: 18px;
   }
@@ -132,10 +138,6 @@ a {
   background-image: url(../img/discogs_icon.svg);
   background-position: center;
   background-size: 100%;
-}
-
-#sidebar #user div:last-child {
-  font-size: 1rem;
 }
 
 /* Sidebar XS rules */
@@ -179,7 +181,7 @@ main {
 .playlist_overlay {
   top: 0;
 
-  i {
+  .icon {
     font-size: 1rem;
     top: 50%;
     left: 50%;
@@ -187,7 +189,7 @@ main {
 
 
     &::before {
-      background-image: url('../img/search_plus.svg');
+      background-image: url(../img/search_plus.svg);
       background-size: $tam-item-icon $tam-item-icon;
       display: inline-block;
       width: $tam-item-icon;

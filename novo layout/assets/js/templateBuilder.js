@@ -17,7 +17,7 @@ let builder = (function Builder() {
                 '    <a class="position-relative" href="#">' +
                 '        <img src="' + IMG_URL + album.id + '.jpg" class="img-fluid" alt="' + album.title + '">' +
                 '        <div class="playlist_overlay position-absolute d-none w-100 h-100 bg-fading-black" album-id="' + album.id + '">' +
-                '            <i class="position-absolute"></i>' +
+                '            <i class="icon position-absolute"></i>' +
                 '        </div>' +
                 '    </a>' +
                 '    <a href="#">' +
@@ -47,7 +47,7 @@ let builder = (function Builder() {
 
         trackList.forEach(function(track) {
             html +=
-                '<li class="track-item d-flex' + (sub ? ' pl-4' : '') + '">' +
+                '<li class="track-item d-flex' + (sub ? ' ps-4' : '') + '">' +
                 '    <div class="track-number">' +
                 '        <span>' + (track.position || '-') + '</span>' +
                 '    </div>' +
