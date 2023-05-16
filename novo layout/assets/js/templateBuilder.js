@@ -1,16 +1,16 @@
+/**
+ * @class Builder
+ */
 let builder = (function Builder() {
     var $this = this;
     /**
      * Constroi o HTML do item para interface
      * @function item
-     * @param {Object[]} albumList Array de objetos JSON com dados do álbum importados do Discogs
-     * @param {String} id
-     * @param {String} title Título
-     * @param {String} img Imagem
+     * @param {Array<Release>} albumList Array de objetos com dados do álbum importados do Discogs
      * @return {String} Retorna o HTML
      */
     this.item = function(albumList) {
-        var html = '';
+        let html = '';
         albumList.forEach(function(album) {
             html +=
                 '<div class="playlist col-6 col-md-3 col-lg-2 d-flex flex-column mb-3 px-2">' +
@@ -20,14 +20,13 @@ let builder = (function Builder() {
                 '            <i class="icon position-absolute"></i>' +
                 '        </div>' +
                 '    </a>' +
-                '    <a href="#">' +
+                '    <a href="https://www.discogs.com/' + DISCOGS_LANG + 'release/' + album.id + '">' +
                 '        <h2 name="title" class="mt-3 text-white text-center">' + album.title + '</h2>' +
                 '    </a>' +
                 '    <span class="text-center">' +
-                '        ' + album.artists.map(function(a) {
-                    return '<a href="https://www.discogs.com/pt_BR/artist/' + a.id + '" target="_blank">' + a.name.replace(/(.*) \(\d+\)/gm, '$1') + '</a>';
+                album.artists.map((a) => {
+                    return '<a href="https://www.discogs.com/' + DISCOGS_LANG + 'artist/' + a.id + '" target="_blank">' + a.name.replace(/(.*) \(\d+\)/gm, '$1') + '</a>';
                 }).join(', ') + '</span>' +
-                //'    </a>' +
                 '</div>';
         });
 
@@ -37,15 +36,14 @@ let builder = (function Builder() {
     /**
      * Constroi o HTML da faixa
      * @function item
-     * @param {String} position Número da faixa
-     * @param {String} title Título
-     * @param {String} duration Tempo de duração
+     * @param {Array<Track>} trackList Array com o objeto de faixas do álbum
+     * @param {boolean} [sub=false] Indica se o HTML deve ser construído conforme uma lista de subfaixas do álbum
      * @return {String} Retorna o HTML
      */
     this.track = function(trackList, sub) {
         var html = '';
 
-        trackList.forEach(function(track) {
+        trackList.forEach((track) => {
             html +=
                 '<li class="track-item d-flex' + (sub ? ' ps-4' : '') + '">' +
                 '    <div class="track-number">' +
@@ -59,12 +57,8 @@ let builder = (function Builder() {
                 '    </div>' +
                 '</li>';
 
-            if (track.type_ != "index" && track.sub_tracks) {
-                debugger;
-            }
-
             if (track.type_ == "index") {
-                html += $this.track(track.sub_tracks, 'subtrack');
+                html += $this.track(track.sub_tracks, true);
             }
         });
 
@@ -73,7 +67,13 @@ let builder = (function Builder() {
 
     this.album = function(album) {
         var html =
-            '<h2 name="title" class="mt-3 text-white text-center">' + album.title + '</h2>' +
+            '<a href="https://www.discogs.com/' + DISCOGS_LANG + 'release/' + album.id + '" target="_blank" title="Abrir no Discogs">' +
+            '    <h2 name="title" class="mt-3 text-white text-center">' + album.title + '</h2>' +
+            '</a>' +
+            '    <span class="text-center">' +
+            album.artists.map((a) => {
+                return '<a href="https://www.discogs.com/' + DISCOGS_LANG + 'artist/' + a.id + '" target="_blank">' + a.name.replace(/(.*) \(\d+\)/gm, '$1') + '</a>';
+            }).join(', ') + '</span>' +
             '<img src="' + IMG_URL + album.id + '.jpg">';
 
         return html;
