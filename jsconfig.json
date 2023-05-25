@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "target": "ES6",
+        "checkJs": true,
+        "jsx": "react",
+        "strictNullChecks": true,
+        "strictFunctionTypes": true
+    },
+    "exclude": [
+        "node_modules",
+        "**/node_modules/*"
+    ],
+    "files": [
+        "assets/js/externs.js",
+        "assets/js/list.min.js",
+        "assets/js/arrFunk.js",
+        "assets/js/arrNovelas.js",
+        "assets/js/arrTrilhas.js",
+        "assets/js/ordena.js",
+        "assets/js/templateBuilder.js",
+        "assets/js/app.js"
+    ]
+}
