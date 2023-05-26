@@ -1,264 +1,133 @@
-<!-- Template original https://bootstrap4.com/out/?demo=volna-record-label-music-streaming-html-template -->
 <!DOCTYPE html>
 <html lang="pt-BR">
-	<head>
-		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="css/main.css">
-		<link rel="shortcut icon" href="img/favicon.png">
-		<title>Lista</title>
-	</head>
-	<body>
-		<header class="header">
-			<div class="header__content">
-				<div class="header__logo">
-					<a href="index.html">
-						<img src="img/logo.png" alt="">
-					</a>
-				</div>
-				<form action="#" class="header__search">
-					<input type="text" placeholder="Artista, &aacute;lbum ou faixa">
-					<button type="button">
-					<i class="far fa-search"></i>
-					</button>
-					<button type="button" class="close">
-					<i class="far fa-times"></i>
-					</button>
-				</form>
-				<div class="header__actions">
-					<div class="header__action header__action--search">
-						<button class="header__action-btn" type="button">
-						<i class="far fa-search fa-2x"></i>
-						</button>
-					</div>
-					<!-- <div class="header__action header__action--note">
-						<span>17
-						</span>
-						<a href="#" class="header__action-btn">
-							<i class="far fa-inbox"></i>
-						</a>
-						<div class="header__drop">
-							<a href="#" class="header__all">View all
-							</a>
-							<div class="header__note header__note--succ">
-								<i class="far fa-check-circle"></i>
-								<p>
-									<a href="#modal-info2" class="open-modal">Payment #51
-									</a> was successful!
-								</p>
-								<span>1 hour ago
-								</span>
-							</div>
-							<div class="header__note header__note--fail">
-								<i class="far fa-times-circle"></i>
-								<p>
-									<a href="#modal-info3" class="open-modal">Payment #50
-									</a> failed!
-								</p>
-								<span>2 hours ago
-								</span>
-							</div>
-							<div class="header__note header__note--info">
-								<i class="far fa-info-circle"></i>
-								<p>
-									<a href="#modal-info4" class="open-modal">Example
-									</a> of notification.
-								</p>
-								<span>2 hours ago
-								</span>
-							</div>
-							<div class="header__note header__note--gift">
-								<i class="far fa-gift"></i>
-								<p>
-									<a href="#modal-info5" class="open-modal">You have received a gift!
-									</a>
-								</p>
-								<span>4 hours ago
-								</span>
-							</div>
-						</div>
-					</div> -->
-				</div>
-				<button class="header__btn" type="button">
-				<span>
-				</span>
-				<span>
-				</span>
-				<span>
-				</span>
-				</button>
-			</div>
-		</header>
-		<div class="sidebar">
-			<!-- sidebar logo -->
-			<div class="sidebar__logo">
-				<img src="img/logo.png" alt="">
-			</div>
-			<!-- end sidebar logo -->
-			<!-- sidebar nav -->
-			<ul class="sidebar__nav">
-				<li class="sidebar__nav-item">
-					<a href="home" class="sidebar__nav-link sidebar__nav-link--active">
-						<i class="fas fa-home"></i>
-						<span>Home</span>
-					</a>
-				</li>
-				<li class="sidebar__nav-item">
-					<a href="lista_ordenada" class="sidebar__nav-link">
-						<i class="far fa-th-list"></i>
-						<span>Lista ordenada</span>
-					</a>
-				</li>
-				<li class="sidebar__nav-item">
-					<a href="artists.html" class="sidebar__nav-link">
-						<i class="far fa-user-friends"></i>
-						<span>Artistas</span>
-					</a>
-				</li>
-				<li class="sidebar__nav-item">
-					<a href="releases.html" class="sidebar__nav-link">
-						<i class="far fa-album-collection"></i>
-						<span>&Aacute;lbuns</span>
-					</a>
-				</li>
-			</ul>
-			<!-- end sidebar nav -->
-		</div>
-		<main class="main">
-			<div class="container-fluid">
-				<section id="lista_ordenada" class="hide">
-					<div class="atalhos">
-						<table>
-							<tr><td name="num">#</td><td name="A">A</td><td name="B">B</td><td name="C">C</td><td name="D">D</td><td name="E">E</td><td name="F">F</td><td name="G">G</td><td name="H">H</td></tr>
-							<tr><td name="I">I</td><td name="J">J</td><td name="K">K</td><td name="L">L</td><td name="M">M</td><td name="N">N</td><td name="O">O</td><td name="P">P</td><td name="Q">Q</td></tr>
-							<tr><td name="R">R</td><td name="S">S</td><td name="T">T</td><td name="U">U</td><td name="V">V</td><td name="W">W</td><td name="X">X</td><td name="Y">Y</td><td name="Z">Z</td></tr>
-						</table>
-					</div>
-					<div class="row row--grid">
-						<!-- title -->
-						<div class="col-12">
-							<div class="main__title main__title--page">
-								<h2>Lista ordenada</h2>
-							</div>
-						</div>
-						<!-- end title -->
-						<div class="col-12">
-							<table class="table" id="tabela_lista_ordenada">
-								<thead>
-									<tr>
-										<th scope="col">#</th>
-										<th scope="col">Artista</th>
-										<th scope="col">T&iacute;tulo</th>
-										<th scope="col">Data</th>
-										<th scope="col">Formato</th>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</section>
-				<section id="album" class="hide">
-					<div class="row row--grid">
-						<!-- title -->
-						<div class="col-12">
-							<div class="main__title main__title--page">
-							</div>
-						</div>
-						<!-- end title -->
-						<div class="col-12">
-							<div class="release">
-								<div class="release__content">
-								</div>
-								<div class="release__list" data-scrollbar="true" tabindex="-1" style="overflow: hidden; outline: currentcolor none medium;">
-									<ul id="track_list" class="main__list main__list--playlist main__list--dashbox">
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</section>
-				<!-- releases -->
-				<section id="releases" class="row row--grid">
-					<!-- title -->
-					<div class="col-12">
-						<div class="main__title">
-							<h2>&Aacute;lbuns</h2>
-							<!-- <a href="releases.html" class="main__link">Ver todos
-								<i class="far fa-arrow-right"></i>
-							</a> -->
-						</div>
-					</div>
-					<!-- end title -->
-					<div class="row row--grid" id="releases_lista">
-					</div>
-				</section>
-				<!-- end releases -->
-				<section id="top_lista" class="row row--grid">
-					<div class="col-12 col-md-6 col-xl-4">
-						<div class="row row--grid">
-							<!-- title -->
-							<div class="col-12">
-								<div class="main__title">
-									<h2>
-									<i class="far fa-microphone"></i> Artistas
-									</h2>
-								</div>
-							</div>
-							<!-- end title -->
-							<div class="col-12">
-								<ul class="main__list" id="top_artistas">
-									<!-- Lista de 5 artistas mais presentes na coleção -->
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="col-12 col-md-6 col-xl-4">
-						<div class="row row--grid">
-							<!-- title -->
-							<div class="col-12">
-								<div class="main__title">
-									<h2>
-									<i class="far fa-music"></i> G&ecirc;neros
-									</h2>
-								</div>
-							</div>
-							<!-- end title -->
-							<div class="col-12">
-								<ul class="main__list" id="top_generos">
-									<!-- Lista de 5 gêneros mais colecionados -->
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="col-12 col-md-6 col-xl-4">
-						<div class="row row--grid">
-							<!-- title -->
-							<div class="col-12">
-								<div class="main__title">
-									<h2>
-									<i class="far fa-album"></i> Formatos
-									</h2>
-								</div>
-							</div>
-							<!-- end title -->
-							<div class="col-12">
-								<ul class="main__list" id="top_formatos">
-									<!-- Lista dos 5 formatos de mídia mais presentes na coleção -->
-								</ul>
-							</div>
-						</div>
-					</div>
-				</section>
-			</div>
-		</main>
-		<script src="js/jquery.slim.min.js"></script>
-		<script src="js/smooth-scrollbar.js"></script>
-		<script src="js/alasql.min.js"></script>
-		<script src="js/fuse.min.js"></script>
-		<script src="js/all.min.js"></script>
-		<script src="js/bootstrap.bundle.min.js"></script>
-		<script src="js/fontawesome.min.js"></script>
-	</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Spotify</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <link rel="stylesheet" href="./assets/css/style.css">
+        <link rel="shortcut icon" href="./assets/img/favicon.ico" type="image/x-icon">
+    </head>
+    <body class="overflow-hidden bg-dark-blue">
+        <div class="container-fluid d-flex px-0">
+            <!-- Left sidebar -->
+            <nav id="sidebar" class="d-flex justify-content-between flex-column fixed-left flex-shrink-0 px-0 text-grey bg-black">
+                <div class="wrapper">
+                    <!-- Logo -->
+                    <a href="#" name="logo" class="d-flex align-items-center py-3 ps-3 disappear">
+                        <img src="./assets/img/logo.svg" class="w-25" alt="Logo">
+                    </a>
+                    <!-- /Logo -->
+
+                    <!-- Logo for XS devices -->
+                    <a name="logo" class="d-none appear mb-4" href="#">
+                        <img src="./assets/img/logo.svg" class="w-100" alt="Logo">
+                    </a>
+                    <!-- /Logo for XS devices -->
+
+                    <!-- Sidebar options -->
+                    <ul id="sidebar_options" class="px-0 disappear">
+                        <li class="position-relative ps-3 mb-2 home active">
+                            <a class="d-flex align-items-center" href="#" name="home">
+                                <img id="home" src="./assets/img/home.svg" alt="Icon depicting a house" name="home">
+                                <span class="ms-2" name="home">Home</span>
+                            </a>
+                        </li>
+
+                        <li class="ps-3 mb-2 lista_colecao">
+                            <a class="d-flex align-items-center" href="#" name="lista_colecao">
+                                <img src="./assets/img/libreria.svg" class="img-fluid" alt="Icon depicting three vertical books" name="lista_colecao">
+                                <span class="ms-2" name="lista_colecao">Lista ordenada</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /Sidebar options -->
+
+                    <!-- Sidebar options for XS devices -->
+                    <div class="d-none appear">
+                        <a href="#" class="d-block mb-3">
+                            <img src="./assets/img/home.svg" alt="Icon depicting a house" name="home">
+                        </a>
+                        <a href="#" class="d-block mb-3" name="lista_colecao">
+                            <img src="./assets/img/libreria.svg" class="img-fluid" alt="Icon depicting three vertical books" name="lista_colecao">
+                        </a>
+                    </div>
+                    <!-- /Sidebar options for XS devices -->
+                </div>
+
+                <!-- Profile options -->
+                <div id="profile" class="d-flex flex-column disappear">
+                    <a href="https://www.discogs.com/pt_BR/user/raphaelzera/collection" target="_blank">
+                        <div id="user" class="d-flex align-items-center mt-3 mb-2 ps-3">
+                            <div class="user_img d-flex justify-content-center align-items-center bg-grey rounded-circle"></div>
+                            <div id="profile_name" class="text-white ms-3">Discogs</div>
+                        </div>
+                    </a>
+                </div>
+                <!-- /Profile options -->
+
+                <!-- Profile options for XS devices -->
+                <div id="profile-xs" class="d-none appear-flex flex-column align-items-center">
+                    <a href="https://www.discogs.com/pt_BR/user/raphaelzera/collection" target="_blank" class="user_img d-flex justify-content-center align-items-center bg-grey rounded-circle"></a>
+                </div>
+                <!-- /Profile options for XS devices -->
+            </nav>
+            <!-- /Left sidebar -->
+            <!-- App content -->
+            <main class="d-flex flex-column w-100 px-0 text-grey">
+                <div id="colecao" class="ps-3 pe-3 pt-4 hide">
+                    <table class="table" id="tabela_lista_ordenada">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Artista</th>
+                                <th scope="col">Título</th>
+                                <th scope="col">Data</th>
+                                <th scope="col">Formato</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sortedList">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="search" class="d-flex justify-content-center flex-wrap px-2 pt-2 pb-2 text-uppercase fixed-top">
+                    <input type="text" placeholder="Artista, &aacute;lbum ou faixa">
+                    <button class="" type="button">
+                        <img src="./assets/img/search.svg">
+                    </button>
+                </div>
+                <!-- Informações de álbum -->
+                <div id="album" class="ps-3 pe-3 pt-4 hide">
+                    <div class="d-flex">
+                        <h1 class="ps-2 w-100 text-white">Informações</h1>
+                        <a href="#" class="fechar ps-2 fixed-right text-white">✕</a>
+                    </div>
+                    <div class="d-flex flex-row my-4">
+                        <div class="info d-flex flex-column align-items-center">
+                        </div>
+                        <div class="info_album d-flex w-100">
+                            <ul id="track_list" class="w-100">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Informações de álbum -->
+                <!-- Lista de álbuns-->
+                <div id="list" class="d-flex flex-column ps-3 pe-1 pt-4">
+                    <h1 class="ps-2 text-white">Álbuns</h1>
+                    <div class="playlist_row container-fluid d-flex my-4">
+                        <div class="row w-100">
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /Lista de álbuns-->
+
+            </main>
+            <!-- /App content -->
+        </div>
+        <script src="./assets/js/fuse.min.js"></script>
+        <script src="./assets/js/all.min.js"></script>
+    </body>
 </html>

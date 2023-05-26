@@ -16,7 +16,7 @@ def get_lista_atual():
     """ Obtém a lista atual (se existir) de JSON's salvos """
     try:
         #tenta abrir o arquivo de saída se ele existir
-        with open('js/list.js', encoding="utf8") as saida_antiga:
+        with open('assets/js/list.js', encoding="utf8") as saida_antiga:
             #carrega o json no python
             return loads(saida_antiga.readline()[11:-1])
     except ValueError:
@@ -67,7 +67,7 @@ def write_file():
     def get_id_sort(release):
         return release['id']
 
-    with open('js/list.js', '+w', encoding="utf8") as f_completo, open('js/list.min.js', '+w',
+    with open('assets/js/list.js', '+w', encoding="utf8") as f_completo, open('assets/js/list.min.js', '+w',
                                                                        encoding="utf8") as f_min:
         #Ordena a lista
         releases.sort(key=get_id_sort)
@@ -220,8 +220,8 @@ def main():
         releases_min.append(minimize_file(releases[len(releases) - 1], row['lancamento']))
 
         if releases[len(releases) - 1]['thumb'] != "" and not os.path.exists(
-                'img/' + str(row['id']) + '.jpg'):
-            with open('img/' + str(row['id']) + '.jpg', "wb") as file:
+                'assets/img/covers/' + str(row['id']) + '.jpg'):
+            with open('assets/img/covers/' + str(row['id']) + '.jpg', "wb") as file:
                 imagem_capa = get_response(releases[len(releases) - 1]['thumb'] + '?')
                 file.write(imagem_capa)
                 file.close()
@@ -242,10 +242,10 @@ args = parse_args()
 #Se estiver autenticado pelo token, o Discogs aceita 60 requisições por minuto, se não 25
 LIMIT = 1.0 / ((24 if args.token is None else 59) / 60)
 
-if not os.path.isdir('img'):
-    os.mkdir('img')
+if not os.path.isdir('assets/img/covers'):
+    os.mkdir('assets/img/covers')
 
-if not os.path.isdir('js'):
-    os.mkdir('js')
+if not os.path.isdir('assets/js'):
+    os.mkdir('assets/js')
 
 main()

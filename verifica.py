@@ -46,7 +46,7 @@ def print_table(lista_sem_img):
 def main():
     """ Função principal """
     try:
-        with open('js/list.js', encoding="utf8") as arquivo:
+        with open('assets/js/list.js', encoding="utf8") as arquivo:
             #Inicializa os contadores
             count = 0
             count_erro_track = 0
