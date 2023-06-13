@@ -21,7 +21,7 @@ jobs:
     - name: Commit builds
       uses: EndBug/add-and-commit@latest
       with:
-        add: '["js/list.min.js", "js/list.js", "img/**"]'
+        add: '["assets/js/list.min.js", "assets/js/list.js", "assets/img/**"]'
         author_name: pxlcmrd
         author_email: raphael.toledo@outlook.com
         message: 'Lista atualizada'
