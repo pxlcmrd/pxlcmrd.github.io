@@ -2,8 +2,8 @@ name: Build
 on:
   push:
     paths:
-      - 'js/list.min.js'
-      - 'js/main.js'
+      - 'assets/js/list.min.js'
+      - 'assets/js/main.js'
       - 'index_dev.html'
       - 'Makefile'
       - '!.github/workflows/**'
@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3.5.2
+      uses: actions/checkout@v3.5.3
     - name: Build arquivos
       run: make
     - name: Commit builds
       uses: EndBug/add-and-commit@latest
       with:
-        add: '["index.html", "js/all.min.js"]'
+        add: '["index.html", "assets/js/all.min.js"]'
         author_name: pxlcmrd
         author_email: raphael.toledo@outlook.com
         message: 'Build'

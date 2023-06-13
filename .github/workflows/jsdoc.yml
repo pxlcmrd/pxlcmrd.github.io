@@ -2,8 +2,8 @@ name: JSDoc
 on:
   push:
     paths:
-      - 'js/externs.js'
-      - 'js/main.js'
+      - 'assets/js/externs.js'
+      - 'assets/js/app.js'
       - '!.github/workflows/**'
       - '.github/workflows/jsdoc.yml'
   workflow_dispatch:
@@ -12,17 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.5.2
       - name: Build
-        uses: andstor/jsdoc-action@v1
+        uses: andstor/jsdoc-action@v1.2.1
         with:
-          source_dir: ./js/main.js
+          source_dir: ./assets/js/app.js
           output_dir: ./docs
           #config_file: conf.json
           template: minami
           front_page: README.md
       - name: Deploy
-        uses: EndBug/add-and-commit@v7
+        uses: EndBug/add-and-commit@latest
         with:
           add: '["./docs/**"]'
           author_name: pxlcmrd

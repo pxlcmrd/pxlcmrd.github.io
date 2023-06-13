@@ -8,20 +8,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.5.3
       with:
         token: ${{ secrets.ACTIONS_PAT }}
     - name: setup python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4.6.1
       with:
         python-version: 3.9
     - name: execute py script
       run: |
         python getdata.py -f
     - name: Commit builds
-      uses: EndBug/add-and-commit@v7
+      uses: EndBug/add-and-commit@latest
       with:
-        add: '["js/list.min.js", "js/list.js", "img/**"]'
+        add: '["assets/js/list.min.js", "assets/js/list.js", "assets/img/**"]'
         author_name: pxlcmrd
         author_email: raphael.toledo@outlook.com
         message: 'Lista atualizada'
