@@ -134,9 +134,10 @@ let builder = (function Builder() {
         html = listaOrdenada.reduce((h, a, i) => {
             return h +
                 '<tr>' +
-                '    <th scope="row">' + (i + 1) + '</th>' +
-                '    <td>' + a.title + '</td>' +
-                '    <td>' + $this.artist(a.artists) + '</td>' +
+                '    <th scope="row"><img src="' + (IMG_URL + a.id) + '.jpg"></th>' +
+                '    <td>' + $this.artist(a.artists) + '</td>' +                
+                '    <td><a href="https://www.discogs.com/' + DISCOGS_LANG + 'release/' + a.id +
+                '" target="_blank" title="Abrir no Discogs">' + a.title + '</td>' +
                 '    <td>' + a.lancamento + '</td>' +
                 '    <td>' + $this.format(a.formats[0]) + '</td>' +
                 '</tr>';
