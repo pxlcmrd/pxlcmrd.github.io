@@ -214,3 +214,9 @@ main {
 #tabela_lista_ordenada {
   color: #FFF;
 }
+#tabela_lista_ordenada img {
+  width: 32px;
+}
+#tabela_lista_ordenada a {
+  color: #FFF;
+}
