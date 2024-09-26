@@ -67,8 +67,8 @@ def write_file():
     def get_id_sort(release):
         return release['id']
 
-    with open('assets/js/list.js', '+w', encoding="utf8") as f_completo, open('assets/js/list.min.js', '+w',
-                                                                       encoding="utf8") as f_min:
+    with open('assets/js/list.js', '+w', encoding="utf8") as f_completo, open(
+        'assets/js/list.min.js', '+w', encoding="utf8") as f_min:
         #Ordena a lista
         releases.sort(key=get_id_sort)
         releases_min.sort(key=get_id_sort)
@@ -166,7 +166,7 @@ def get_collection(list_discogs):
 
         for release in dados['releases']:
             if len(release['notes']) < 3 or not match(r"\d{3}[\d\?]", release['notes'][2]['value']):
-                raise Exception('Data de lançamento não definida para o item ' + str(release['id']))
+                raise ValueError('Data de lançamento não definida pro item ' + str(release['id']))
 
             list_discogs.append({
                 "id": release['id'],
