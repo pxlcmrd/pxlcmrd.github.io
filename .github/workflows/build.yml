@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3.5.3
+      uses: actions/checkout@latest
       with:
         token: ${{ secrets.ACTIONS_PAT }}
     - name: Build arquivos
