@@ -69,7 +69,7 @@ def main():
 
             for row in list_discogs:
                 #Tenta ver se a imagem do release lido do list.js existe na pasta
-                if not os.path.exists('img/' + str(row['id']) + '.jpg'):
+                if not os.path.exists('assets/img/covers/' + str(row['id']) + '.jpg'):
                     lista_sem_img.append([str(row['id']), row['artists_sort'], row['title']])
                     count += 1
 
