@@ -30,7 +30,6 @@ def parse_args():
     parser.add_argument('-f', '--force', action='store_true', dest='force',
                         help='--force [Força o release a ser baixado novamente]')
     parser.add_argument('-t', '--token', required=False, dest='token',
-                        default='PEQJMbWyIhFclTjZKBdCeHQcdgueLISCQNvfqgkO',
                         help='--token [Token (chave) de acesso pessoal para desenvolvedor]')
     return parser.parse_args()
 
