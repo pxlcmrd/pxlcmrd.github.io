@@ -19,7 +19,7 @@ jobs:
       run: |
         python getdata.py -t ${{ secrets.DISCOGS_TOKEN }}
     - name: Commit builds
-      uses: EndBug/add-and-commit@latest
+      uses: EndBug/add-and-commit@v11.0.0
       with:
         add: '["assets/js/list.min.js", "assets/js/list.js", "assets/img/**"]'
         author_name: pxlcmrd
