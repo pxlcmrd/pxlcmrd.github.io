@@ -8,13 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3.5.3
+      uses: actions/checkout@latest
       with:
         token: ${{ secrets.ACTIONS_PAT }}
     - name: setup python
-      uses: actions/setup-python@v4.6.1
+      uses: actions/setup-python@latest
       with:
-        python-version: 3.9
+        python-version: 3.15
     - name: execute py script
       run: |
         python getdata.py -f -t ${{ secrets.DISCOGS_TOKEN }}
